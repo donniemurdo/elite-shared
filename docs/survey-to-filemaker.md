@@ -1,11 +1,12 @@
 # Survey to FileMaker data flow: design
 
-Status: draft for Greg's review, 2026-10-23. Nothing built. Soft furnishings survey first; bed survey on the backburner and follows the same pattern later.
+Status: design agreed in principle, 2026-10-23 (decisions in section 9). Nothing built. Soft furnishings survey first; bed survey on the backburner and follows the same pattern later.
 
 ## 1. Summary
 
 - Phones keep saving to the Worker as now. The Worker becomes a holding area and exposes a small, locked down feed.
-- FileMaker Cloud pulls from that feed on a server schedule using Insert from URL, creates Survey records, then confirms receipt. Later FileMaker pushes jobs back the same way.
+- Every job starts as a FileMaker quote. Its number `Q-000123` is the key everywhere; when ordered it becomes `S-000123` (same serial). FileMaker pushes quote and client details to the Worker, so the office (or app) enters a Q- number and the client data fills in.
+- FileMaker Cloud pulls finished surveys from the feed on a server schedule using Insert from URL, attaches them to the quote by its number, then confirms receipt.
 - No extra Claris licence is needed: the schedule runs as Greg's existing Claris ID.
 - Xero only ever receives data from FileMaker (Roadmap Phase 3 and 4, unchanged).
 - Both apps are unfinished, so the recommendation is **agree the shape now, build later**, and make a few cheap choices in the soft furnishings app now so it is ready (section 8, stage 0).
@@ -57,11 +58,24 @@ Answer to the custom OAuth question: no, it would not give the Worker access wit
 | `GET /api/fm/surveys?after=<cursor>&limit=25` | Finished surveys since the cursor. Flattened JSON: header, fabrics, and one row per treatment with its room and window. No photo data, only photo keys. |
 | `POST /api/fm/ack` `{ "items":[{"surveyId","revision","fmId"}] }` | FileMaker confirms what it committed. Worker records it and the last good poll time. |
 | `GET /api/fm/photo/<key>` | One photo for a web viewer link. Photos stay in R2, not FileMaker containers (Cloud storage is limited per user). |
-| `PUT /api/fm/jobs` (later stage) | FileMaker pushes jobs (customer, site, `CompanyID`, quote or sale number) so measures start from a FileMaker job and surveys come back carrying the right ids. |
+| `PUT /api/fm/quotes` | FileMaker pushes soft furnishing quotes: `QuoteSerialNumber`, Q- number, S- number once ordered, `CompanyID`, client name, contact, phone, email, site / delivery address and postcode, customer reference. The Worker keeps a copy. |
+| `GET /api/quote/Q-000123` (staff) | Admin page and app look up a Q- number and fill in the client data from that copy. |
 
 Feed: when a survey is marked measured (or fitted), the Worker writes a small index object `feed/<ISO time>-<surveyId>-<revision>.json` in the existing R2 bucket. Cursor is the last key read (R2 `list` with `startAfter`). No new storage service.
 
 The Worker does the flattening, so the FileMaker script is a plain loop of `JSONGetElement` and Set Field, and changes to the phone app's internal layout don't break FileMaker as long as the feed format stays the same.
+
+### Q- number lookup: how it really works
+
+The Worker cannot ask FileMaker live (that needs the Data API and a licence, section 2). So FileMaker sends quote details to the Worker ahead of time, and the lookup reads that copy:
+
+- When a soft furnishing quote is saved in FileMaker, a script sends its details to the Worker with Insert from URL (from the user's own FileMaker session, so no extra licence).
+- The 15 minute schedule also sends any quotes changed since the last run, as a backstop if a send failed.
+- Typing `Q-000123` on the admin page (or in the app) fills in client, contact and site from the copy. A measure is created against that number; its id becomes the Q- number, so the survey id is the Q- number too.
+- When the quote is ordered, FileMaker sends the S- number and the measure shows as a fit job under the same serial.
+- The phone keeps the jobs list for offline use, as it does now.
+
+Customer details are then edited in FileMaker only; the admin page shows them read only.
 
 ## 6. FileMaker side (when it is built)
 
@@ -78,9 +92,9 @@ Proposed records (names fitted to Standards §25 when scoped; none exist yet):
 - **SurveyFabrics**: fabric name, supplier, code, colour, roll width, repeat, FR. Matched to `FabricDesignRanges` by the office, not automatically.
 - **SurveySyncLog**: run time, counts, errors.
 
-Matching to customers and fabrics: **never by name**, same rule as Xero (Roadmap Phase 3). If the survey came from a FileMaker job it carries `CompanyID`; otherwise it lands as Unmatched and the office picks or creates the company.
+Matching: by `QuoteSerialNumber` (from the Q- number), so the survey links to its quote and, through it, its company. **Never by name**, same rule as Xero. Fabrics are matched to `FabricDesignRanges` by the office, not automatically.
 
-A survey does not become a sale on its own. It becomes a Survey record the office turns into a quote; the sale and order come from the accepted quote, then POs, then the invoice to Xero. Auto creating draft quote lines from survey items needs a mapping from treatment type to Products: later.
+Flow: quote (Q-) → measure survey against that quote → survey sizes checked against the quote lines → order (S-) → fit → POs and invoice to Xero. Updating quote lines from survey sizes automatically needs a mapping from treatment type to Products: later, and never silently (differences flagged for review).
 
 ## 7. Poor signal and errors
 
@@ -97,21 +111,22 @@ EliteFM is in Phase 1 (quote PDF and email); there are no Survey, Sale or Order 
 
 | Stage | Work | When |
 |---|---|---|
-| 0 | Soft furnishings app: survey ids become full UUIDs (or every survey must start from a measure); add a `revision` counter; keep fabrics and treatments as structured fields, not free text | Now, while the app is being built. Cheap. |
-| 1 | Worker: feed, ack, photo endpoint, service token, photo split upload, daily Teams check | When the survey app is stable. No FileMaker changes. |
-| 2 | FileMaker: Surveys, SurveyItems, SurveyFabrics, SurveySyncLog, pull script, schedule, review list | Greg's call; not before the Phase 1 gate |
-| 3 | Draft quote from a survey (treatment to product mapping) | After stage 2 |
-| 4 | FileMaker pushes jobs to the Worker; admin page stops typing customers by hand | After stage 2 |
+| 0 | Soft furnishings app: every survey starts from a measure that carries the Q- number; add a `revision` counter; keep fabrics and treatments as structured fields, not free text | Now, while the app is being built. Cheap. |
+| 1 | Worker: quotes copy and Q- lookup, feed, ack, photo endpoint, service token, photo split upload, daily Teams check | When the survey app is stable. No FileMaker changes. |
+| 2 | FileMaker: send quote on save, Surveys, SurveyItems, SurveyFabrics, SurveySyncLog, pull script, schedule, review list | Greg's call; not before the Phase 1 gate |
+| 3 | Survey sizes compared with quote lines, differences flagged (treatment to product mapping) | After stage 2 |
+| 4 | S- number and fit jobs driven from FileMaker orders | With Phase 2 (orders) |
 | Later | Bed survey: add cloud upload (it has none today) and reuse stages 1 to 4 with `Kind = Bed` | Off the backburner |
 
-## 9. Open decisions for Greg (all open as of 2026-10-23)
+## 9. Decisions (Greg, 2026-10-23)
 
-1. **Open.** Import only finished (measured) surveys, recommended, or every draft save?
-2. **Open.** Must every survey start from a measure? Recommended: yes, it gives every survey a stable id and a job to match.
-3. **Open.** Who owns jobs long term: FileMaker (recommended, stage 4) or the admin page?
-4. **Open.** Photos: keep in R2 and view by link (recommended) or copy into FileMaker containers?
-5. **Open.** Schedule depends on Greg's Claris ID and must be re-saved yearly. Acceptable for now?
-6. **Open.** Pull frequency: every 15 minutes in working hours, or less?
+1. **Agreed.** Only finished (measured) surveys go to FileMaker.
+2. **Agreed.** Every measure comes from a FileMaker quote and is keyed by its Q- number (`"Q-" & Right ( "000000" & QuoteSerialNumber ; 6 )`). Ordered jobs become S- with the same serial and turn into a fit.
+3. **Agreed.** FileMaker owns client data. Entering a Q- number pulls it through.
+4. **Agreed.** Photos stay in Cloudflare R2, viewed by link.
+5. **Agreed.** The schedule runs under Greg's Claris ID; Greg re-saves it in Admin Console once a year.
+6. **Agreed.** Pull every 15 minutes in working hours. Cost: Insert from URL is not the Data API, so the Data API allowance does not apply. About 40 calls a day on the Cloudflare side, far inside the Workers and R2 free allowances.
+7. **Open.** Which quotes count as soft furnishing (for example a quote type or product category), so only those are sent to the Worker.
 
 ## 10. Not checked
 

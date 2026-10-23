@@ -101,7 +101,7 @@ Built by Greg with Claude Code and agentic-fm on his Mac (`/Users/gwins/Developm
 * Both survey repos pushed to GitHub, private (infra item 5).
 * Cloud environment set up with a scoped Cloudflare token (expires 2027-10-23); read access to the Worker, secrets, R2 and the zone verified. Write access not proven until the first real deploy.
 * Shared design file drafted from the brand PDFs.
-* Survey to FileMaker data flow design drafted: [docs/survey-to-filemaker.md](docs/survey-to-filemaker.md).
+* Survey to FileMaker data flow design agreed in principle: [docs/survey-to-filemaker.md](docs/survey-to-filemaker.md). Key: every measure comes from a FileMaker quote and is keyed by its Q- number (S- once ordered, same serial); FileMaker pushes quote and client data to the Worker so a Q- number fills in the client; FileMaker pulls finished surveys every 15 minutes via a server schedule under Greg's Claris ID (re-save yearly). No extra Claris licence needed. Open: how FileMaker marks a quote as soft furnishing. Nothing built.
 * This shared repo and note created.
 
 ## 7. To do next (in this order unless Greg says otherwise)
