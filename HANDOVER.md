@@ -105,7 +105,7 @@ Built by Greg with Claude Code and agentic-fm on his Mac (`/Users/gwins/Developm
 * Cloud environment set up with a scoped Cloudflare token (expires 2027-10-23); read access to the Worker, secrets, R2 and the zone verified. Write access not proven until the first real deploy.
 * Shared design file drafted from the brand PDFs.
 * Survey to FileMaker data flow design agreed in principle: [docs/survey-to-filemaker.md](docs/survey-to-filemaker.md). Key: every measure comes from a FileMaker quote and is keyed by its Q- number (S- once ordered, same serial); FileMaker pushes quote and client data to the Worker so a Q- number fills in the client; FileMaker pulls finished surveys every 15 minutes via a server schedule under Greg's Claris ID (re-save yearly). No extra Claris licence needed. Jobs are created explicitly by the office (FileMaker checkbox or admin page, Measure or Fit only, one job per Q- number). Nothing built.
-* Survey review and quoting recommendation: [docs/survey-review-and-quoting.md](docs/survey-review-and-quoting.md). Office reviews each item and clears warnings on a new admin review screen; only Checked surveys go to FileMaker; supplier, product and fabric are picked and priced in FileMaker on a new allocation card off the quote (not on the web page, because FileMaker owns the catalogue, codes and costing). Nothing built; decisions open in section 11.
+* Survey review and quoting recommendation: [docs/survey-review-and-quoting.md](docs/survey-review-and-quoting.md). Office reviews each item and clears warnings on a new admin review screen; only Checked surveys go to FileMaker; supplier, product and fabric are picked and priced in FileMaker on a new allocation card off the quote (not on the web page, because FileMaker owns the catalogue, codes and costing). Greg's answers recorded 2026-10-23 (Curtainwise costs fabric metres and making; that send lives in FileMaker). Nothing built; remaining decisions in section 11.
 * This shared repo and note created.
 * Tests fixed: `npm install`, then `./build.sh && npm test` runs all 7 files from the repo (Playwright for app and admin, Node for the Worker).
 * People list, own jobs only and external user support (soft furnishings [PR #3](https://github.com/donniemurdo/elite-softfurnishing-survey/pull/3), built on PR #2, all 9 test files pass, **not deployed**, needs Greg's OK). Measurer and fitter fields are dropdowns from the list, sales reps appear as measurers, "Someone else..." for a one off.
@@ -122,7 +122,7 @@ Built by Greg with Claude Code and agentic-fm on his Mac (`/Users/gwins/Developm
    * Warn if the chain would be under about 500 mm, or if hanging height is missing (Check screen and when marking measured).
    * Required safety device per chain operated blind: tensioner fixed to wall, breakaway, or chain break.
    * All of it in the Excel export.
-5. Survey review (once Greg answers the open decisions): phone app critical choices start blank (blind fit, drop reference, heading, lining are pre-filled today, so the office cannot tell chosen from untouched), shared warning rules file, survey locks after Measured; then the admin review screen with edits, warning clearance and Mark as checked. Steps A and B in [docs/survey-review-and-quoting.md](docs/survey-review-and-quoting.md) section 7. No FileMaker change.
+5. Survey review: phone app critical choices start blank (agreed 2026-10-23; blind fit, drop reference, heading, lining are pre-filled today, so the office cannot tell chosen from untouched), shared warning rules file, survey locks after Measured; then the admin review screen with edits, warning clearance and Mark as checked. Steps A and B in [docs/survey-review-and-quoting.md](docs/survey-review-and-quoting.md) section 7. No FileMaker change.
 6. Later: FileMaker format Excel export (Greg supplies the format), cloud backup for the bed survey, Curtainwise column template, brand fonts and logo, possibly an import of jobs from FileMaker (check the DDR first). Survey to FileMaker stage 0 (UUID survey ids, revision counter) fits here, see section 10.
 
 ## 8. Rules
@@ -130,7 +130,7 @@ Built by Greg with Claude Code and agentic-fm on his Mac (`/Users/gwins/Developm
 * Never ask Greg to paste secrets, passwords, keys or tokens into chat. Secrets are set with `npx wrangler secret put`. Never print secret values in notes, logs or commits.
 * The Entra client secret must never be repeated anywhere; rotate it if it ever appears.
 * Keep all repos private.
-* Cloudflare Access and security settings are Greg's to change: give him the steps.
+* Cloudflare Access: the cloud token has Access Apps and Policies Edit (Greg, 2026-10-23). Claude changes Access only when Greg asks, and reports exactly what changed. The measure app is a zone level Access app (`/zones/<zone>/access/apps`; the account level list shows nothing). Other security settings stay Greg's; give him steps.
 * Never delete data, buckets or files without asking first and saying exactly what will be lost.
 * Say before shipping if something might break the live app measurers use on site.
 * If a request could mean two things, ask one short question.
@@ -141,8 +141,13 @@ Built by Greg with Claude Code and agentic-fm on his Mac (`/Users/gwins/Developm
 
 | # | Action | Who | Status |
 |---|---|---|---|
+<<<<<<< HEAD
 | 1 | Move R2 bucket `elite-surveys` out of North America. The `--location weur` hint is ignored when a bucket name is reused, so the bucket was recreated in the EU jurisdiction (Greg's choice), same name. Cloudflare places it in EEUR; data is guaranteed to stay in the EU. 11 test objects deleted, old bucket deleted, Worker redeployed with the EU binding, write and read checked. | Claude | **Done 2026-10-23.** Greg to confirm one real cloud backup save from the app shows as saved. Greg to merge elite-softfurnishing-survey PR #2 (adds the EU binding). Live is v13 with the EU binding (version 547e2eaa) |
-| 2 | Cloudflare Access: Microsoft for staff, emailed PIN for Scot only. **Now:** on the measure app's Login methods, turn off "Accept all available identity providers", tick only Microsoft Entra ID, untick One time PIN, turn on Instant Auth, save, check in a private window (steps sent 2026-10-23). **When Scot is added, two options (Greg to choose; recommended A):** A) separate address `fit.elitecontractfurniture.co.uk` on the same Worker with its own Access app, One time PIN only, policy allows only Scot's email; Greg sends Claude its audience tag, Claude adds the route and the tag to `POLICY_AUD`. Staff app untouched. B) same address: re-tick One time PIN, add a policy allowing only Scot's email with login method One time PIN, require Microsoft on the staff policy, turn Instant Auth off; staff then see a two button login screen. | Greg (steps from Claude) | Open: Microsoft only step not yet confirmed; A or B not chosen |
+| 2 | Cloudflare Access: Microsoft for staff, emailed PIN for Scot only. **Staff part done 2026-10-23:** the measure app (zone level Access app) allows one login method (Microsoft) with Instant Auth on; Greg confirmed a private window goes straight to Microsoft. **When Scot is added, two options (Greg to choose; recommended A):** A) separate address `fit.elitecontractfurniture.co.uk` on the same Worker with its own Access app, One time PIN only, policy allows only Scot's email; Claude can create it (token has Access edit) and adds the route and its audience tag to `POLICY_AUD`. Staff app untouched. B) same address: re-tick One time PIN, add a policy allowing only Scot's email with login method One time PIN, require Microsoft on the staff policy, turn Instant Auth off; staff then see a two button login screen. | Claude when Greg asks | Staff part **Done 2026-10-23**. Scot part open: A or B not chosen, deferred until near his first job |
+=======
+| 1 | Move R2 bucket `elite-surveys` out of North America. The `--location weur` hint is ignored when a bucket name is reused, so the bucket was recreated in the EU jurisdiction (Greg's choice), same name. Cloudflare places it in EEUR; data is guaranteed to stay in the EU. 11 test objects deleted, old bucket deleted, Worker redeployed with the EU binding, write and read checked. | Claude | **Done 2026-10-23.** Greg to confirm one real cloud backup save from the app shows as saved. PR #2 (EU binding) merged to main. Live is v13 with the EU binding (version 547e2eaa) |
+| 2 | Cloudflare Access on the measure app: Microsoft for staff, emailed PIN for Scot only. Until Scot is added: untick One time PIN so only Microsoft shows, and Instant authentication can be on. When Scot is added: re-tick One time PIN, add a policy that allows only Scot's email with login method One time PIN, require the Microsoft login method on the staff policy, and turn Instant authentication off (it only works with one login method). | Greg (steps from Claude) | Open |
+>>>>>>> origin/main
 | 3 | Teams: `TEAMS_WEBHOOK_URL` is already set as a Worker secret (seen by the 2026-10-23 deploy check). Still to do: live test with a real booking; a card should appear in Measure & Fit with the measurer mentioned. | Greg tests | Open, live test unconfirmed |
 | 4 | Measurers move to the new address (save a draft file first, then re add the Home Screen icon). Bed app is at `/beds/`. Retire the old morning-queen-dc99 workers.dev address. | Greg and measurers | Open |
 | 5 | Push both repos to GitHub (private). | Claude | **Done 2026-10-23** |
@@ -166,21 +171,12 @@ Built by Greg with Claude Code and agentic-fm on his Mac (`/Users/gwins/Developm
 
 ## 11. Open decisions
 
-**Survey to FileMaker** (details in [docs/survey-to-filemaker.md](docs/survey-to-filemaker.md) section 9). No spare Claris licence, and custom OAuth does not avoid one, so the draft design has FileMaker pull from a secured Worker feed on a server schedule. Not approved.
-1. Import only finished (measured) surveys, or every draft save? Recommended: finished only.
-2. Must every survey start from a measure? Recommended: yes.
-3. Who owns jobs long term: FileMaker or the admin page? Recommended: FileMaker.
-4. Photos: keep in R2 and view by link, or copy into FileMaker containers? Recommended: R2.
-5. Is a schedule tied to Greg's Claris ID, re-saved yearly, acceptable for now?
-6. Pull frequency: every 15 minutes in working hours, or less?
+**Survey to FileMaker** (details in [docs/survey-to-filemaker.md](docs/survey-to-filemaker.md) section 9): all decisions agreed 2026-10-23. Decision 1 changed the same day: only surveys checked and sent by the admin team go to FileMaker.
 
-**Survey review and quoting** (details in [docs/survey-review-and-quoting.md](docs/survey-review-and-quoting.md) section 8)
-1. Send to FileMaker on Checked (office reviewed), not Measured? Recommended: yes. Changes survey design decision 1.
-2. Quote lines: one per surveyed item, or one per identical spec with a quantity and room numbers? Recommended: grouped by spec.
-3. Fabric metres: FileMaker calculation shown as an editable suggestion, or the maker's figure? Recommended: calculation; needs Greg's allowances per heading.
-4. Making and blinds pricing: supplier quotes each job (cost typed per line) or price lists by width and drop (needs a price grid, new scope)? Decides most of the FileMaker build.
-5. Critical choices start blank on the phone? Recommended: yes, at least fit and drop reference, with "same as last item".
-6. Office may edit measurements on the review screen with a full log, measurer copy locked after Measured? Recommended: yes.
+**Survey review and quoting** (details in [docs/survey-review-and-quoting.md](docs/survey-review-and-quoting.md) section 8). Agreed 2026-10-23: warnings reviewed and cleared on the web admin page only, Missing and Check kinds, each cleared on its own; admin team sends checked surveys to FileMaker with a button; grouping of quote lines done in FileMaker after fabric allocation; critical choices start blank on the phone; Curtainwise returns fabric metres and making cost, and the send to Curtainwise lives in FileMaker (fabric per curtain with roll width and pattern repeat); roller blinds made by Excel (excelgb.com, Blindata portal) and priced there by the admin team, costs typed into FileMaker; roman blinds made by Curtainwise; no bulk clear of warnings; office can edit measurements, every change tracked. Still open:
+1. Ask Curtainwise for a CSV or Excel export of their quotation and fabric summary (today two PDFs, Cust Ref = Q- number, sizes in cm, per line net price and fabric metres, per fabric roll width and pattern repeat). Otherwise typed entry first.
+2. What input format Curtainwise wants from us, and cm or mm.
+3. Printable roller blind list from FileMaker for keying into the Excel portal? Recommended: yes.
 
 **Design** (details in [design/elite-design.md](design/elite-design.md) section 8)
 1. Buttons: darker olive #686D1E (passes contrast) or brand olive with larger bold labels?
@@ -193,7 +189,14 @@ Built by Greg with Claude Code and agentic-fm on his Mac (`/Users/gwins/Developm
 
 | Date | What changed |
 |---|---|
+| 2026-10-23 | Access: staff login confirmed Microsoft only with Instant Auth (infra item 2 staff part done). Token given Access Apps and Policies Edit; Claude changes Access only when Greg asks. |
+<<<<<<< HEAD
 | 2026-10-23 | Soft furnishings PR #3: people list (Greg edits), measurers and fitters see only their own jobs, external email PIN users allowed only while in the list, admin dropdowns. Not deployed. Access item 2 split into "Microsoft only now" and the Scot options. |
+=======
+| 2026-10-23 | Survey review: Curtainwise example PDFs read (two per job, matched by Q- number and Location); no bulk warning clear; rollers by Excel (blind maker), romans by Curtainwise. |
+| 2026-10-23 | Survey review: admin team sends checked surveys to FileMaker (survey design decision 1 changed), grouping in FileMaker, blinds priced via Excel by the admin team, office edits allowed and fully tracked. |
+| 2026-10-23 | Survey review and quoting: Greg's answers recorded (web review only, each warning cleared on its own, grouped quote lines, blank defaults, Curtainwise returns metres and making cost, send to Curtainwise from FileMaker). |
+>>>>>>> origin/main
 | 2026-10-23 | Survey review and quoting recommendation written (docs/survey-review-and-quoting.md): review and warnings on the web admin page, supplier, fabric and pricing in FileMaker. Open decisions added to section 11. Nothing built. |
 | 2026-10-23 | R2 bucket `elite-surveys` moved to the EU jurisdiction (location hint ignored for a reused name). Test data deleted. Worker redeployed with `jurisdiction: eu` binding. |
 | 2026-10-23 | Soft furnishings: tests runnable from the repo; release v13 (notes stand out, call and directions icons, admin New measure / New fit fix) merged and live. A deploy during the bucket move briefly created a stray North America bucket; removed and redeployed with the EU binding.  |

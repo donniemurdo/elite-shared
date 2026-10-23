@@ -1,6 +1,6 @@
 # Survey review and quoting: recommendation
 
-Status: recommendation, 2026-10-23. Nothing built. Decisions open in section 8. Builds on [survey-to-filemaker.md](survey-to-filemaker.md).
+Status: recommendation, 2026-10-23, updated with Greg's answers the same day (section 8). Nothing built. Builds on [survey-to-filemaker.md](survey-to-filemaker.md).
 
 ## 1. Short answer
 
@@ -19,18 +19,20 @@ What Greg asked for ("next to each window pick a supplier and fabric") is delive
 
 ```
 Measurer (phone)        Office (web admin)                 Office (FileMaker)
-measure ──▶ Measured ──▶ Review screen: all data, ──▶ Checked ──▶ pulled in (15 min)
-                         warnings fixed or cleared            Allocate: product + fabric per item
+measure ──▶ Measured ──▶ Review screen: all data, ──▶ Send to  ──▶ pulled in (15 min)
+                         warnings fixed or cleared   FileMaker  Allocate: product + fabric per item
                                                               Create quote lines ──▶ cost ──▶ Q- PDF
 ```
 
-0. **Start (Greg, 2026-10-23):** the office creates a soft furnishing measure or fit, either by the "Soft furnishing job" tick box on the quote in FileMaker (already linked to its Q- number) or on the admin page (where they type the Q- number). The first question is "Measure or Fit only?". One job per Q- number ([survey-to-filemaker.md](survey-to-filemaker.md) section 5). A measure follows steps 1 to 6. A fit only job (client supplied sizes) has no measurer: the office enters the client's sizes on the same review screen (step 2), the same warnings apply, and it carries on from step 3.
+0. **Start (Greg, 2026-10-23):** the office creates a soft furnishing measure or fit, either by the "Soft furnishing job" tick box on the quote in FileMaker (already linked to its Q- number) or on the admin page (where they type the Q- number). The first question is "Measure or Fit only?". One job per Q- number ([survey-to-filemaker.md](survey-to-filemaker.md) section 5). A measure follows steps 1 to 8. A fit only job (client supplied sizes) has no measurer: the office enters the client's sizes on the same review screen (step 2), the same warnings apply, and it carries on from step 3.
 1. Measurer marks the survey **Measured**. The phone copy locks for the measurer (office can reopen it).
 2. Office opens the survey on the admin page review screen. Every room, window and item with every value entered, photos and sketches, and the warnings.
 3. Office fixes values or clears each warning ("checked, correct"). Every edit and clearance is logged with who and when.
-4. When nothing is open, office presses **Mark as checked**. Only then does the survey appear in the FileMaker feed.
-5. FileMaker pulls it against the quote (by Q- number, as agreed). On the quote, office opens **Allocate from survey**: one row per item, pick product and fabric, bulk apply to similar rows.
-6. **Create quote lines**: FileMaker writes headings, quote lines and fabric option rows, then the normal Update Costs / Sales Price workflow prices them. From there it is the normal quote (PDF, send, Accepted, S-).
+4. When nothing is open, the admin team presses **Send to FileMaker** (Greg, 2026-10-23). Only then does the survey appear in the FileMaker feed.
+5. FileMaker pulls it against the quote (by Q- number, as agreed). On the quote, office opens **Allocate from survey**: one row per item, pick product and fabric (supplier, range, colour), bulk apply to similar rows.
+6. **Send to Curtainwise for costing** (Greg, 2026-10-23: lives in FileMaker). FileMaker produces the file for the maker: every curtain with its room, window, sizes, heading, lining, and the fabric allocated to it with supplier, range, colour, roll width and pattern repeat. FileMaker is the right place because the fabric allocation is made there.
+7. Curtainwise works out fabric metres (heading allowance and other workroom allowances) and the making cost, and sends them back. Office enters them in FileMaker: metres on each fabric option row, making cost on the line.
+8. **Create quote lines** (or update them with the returned figures): headings, grouped quote lines, fabric option rows, then the normal Update Costs / Sales Price workflow. From there it is the normal quote (PDF, send, Accepted, S-).
 
 ## 3. Warnings: what to flag and how clearing works
 
@@ -40,6 +42,8 @@ Two kinds:
 |---|---|---|
 | **Missing** (critical field blank) | Curtain drop, blind width, inside or outside recess not chosen | No. Enter the value, or set it to TBC with a note (same idea as the TBC colour rule in FileMaker). TBC items go to FileMaker marked TBC. |
 | **Check** (value looks wrong) | Drop of 240 (cm not mm), widths differ by 15 mm, rail narrower than window | Yes. "Checked, correct" records who and when. |
+
+Each warning has its own **Checked, correct** button (Greg, 2026-10-23). Clearing one never clears another. No bulk clear, not even for identical looking warnings on identical items, in case they are not identical (Greg, 2026-10-23).
 
 Clearing rule: a clearance is stored against the item, the warning code and the values it was raised on. If any of those values change later, the warning comes back. No silent carry over.
 
@@ -52,7 +56,7 @@ Clearing rule: a clearance is stored against the item, the warning code and the 
 | Pelmet | Width, depth, projection |
 | Hardware | Fixing type, length, supply type |
 
-**Found in the code, needs fixing for this to work:** the phone app pre-fills several critical choices: blind fit defaults to "Inside the recess", drop defaults to "Track to floor", heading to pencil pleat, lining to lined. A default looks exactly like a measured answer, so the office cannot tell "chosen" from "never touched". Recommend these start blank and count as Missing until chosen. This is the main reason "is it recess or exact?" cannot be checked today.
+**Found in the code, needs fixing for this to work:** the phone app pre-fills several critical choices: blind fit defaults to "Inside the recess", drop defaults to "Track to floor", heading to pencil pleat, lining to lined. A default looks exactly like a measured answer, so the office cannot tell "chosen" from "never touched". Agreed (Greg, 2026-10-23): these start blank and count as Missing until chosen. This is the main reason "is it recess or exact?" cannot be checked today.
 
 **Check warnings already in the app** (keep, reuse): unit slips (under 100 mm), readings spread (curtain drops over 20 mm, blind readings over 10 mm), unusual sizes, rail narrower than window or short extension, rail overhang beyond wall space, shallow recess under 60 mm, inward opening window, handle clearance, wide or long blinds, pelmet narrower than rail or too little projection, duplicate room numbers.
 
@@ -74,7 +78,7 @@ The warning rules must be one shared file used by the phone app, the admin page 
 * Warnings shown next to the field they belong to, with **Edit** and **Checked, correct** buttons.
 * Filter: only items with open warnings. Header: "12 of 14 warnings cleared".
 * Table view: one row per item across the whole job, sortable by type and size. Fastest way to eyeball a 100 room hotel.
-* **Mark as checked** enabled only with nothing open. Sets the survey revision that FileMaker will pull.
+* **Send to FileMaker** enabled only with nothing open. Marks the survey Checked and sets the revision FileMaker will pull. A later office edit needs another Send, and FileMaker flags the differences.
 * Office edits create a new revision, logged as old value, new value, who, when. If the phone later uploads an older revision it is held for review, not allowed to overwrite.
 
 **Worker**
@@ -90,7 +94,9 @@ All of this is survey integration stage 2 and 3, so **after the Phase 1 gate** a
 * **Quote edit card:** a Survey panel in the reserved right hand panel on `UI_Quote_Edit_Card` (kept free for a quote level feature, ROADMAP Parallel). Shows survey status, revision, open TBCs, a link to the web review screen, and the **Allocate from survey** button.
 * **Allocation card** (new): one row per survey item grouped by room and window. Columns: room, window, item, order size, measurer's fabric note, Product, Fabric (supplier, range, colour). Uses the existing Product Picker and fabric Supplier to Design/Range pickers. Tick several rows and **Apply to selected** so 60 identical rooms take one pick, not 60.
 * **Create quote lines** script: writes heading rows (`LineType = "Heading"`) and quote lines with `SurveyItemID` kept on the line, plus `Main Fabric` option rows with metres. Then the normal costing workflow. Never changes an existing line silently: a later survey revision flags differences on the line for review (stage 3).
-* **Fabric metres:** the survey app deliberately does not compute fabric quantities. Fabric option rows cost by metres x per metre cost, so something has to work out metres (section 8, decision 3).
+* **Send to Curtainwise for costing** (new script and export, from the quote). One row per curtain: Q- number, room, window, item, quantity, rail width, finished drop, drop reference, heading, pair or single, lining, extras, and the allocated fabric (supplier, range, colour, roll width, pattern repeat). Column layout to match Curtainwise's template (already on the to do list as "Curtainwise column template").
+* **Curtainwise return:** fabric metres per curtain and making cost go back onto the fabric option row (`Quantity` in metres, so `TotalCost` = metres x per metre cost works as now) and the line's making cost. Typed by the office for the first version; an import only if Curtainwise can send a file in a fixed layout.
+* **Roll width and pattern repeat must come from `FabricDesignRanges`**, not the measurer's notes. Standards does not list these fields on `FabricDesignRanges`; check they exist before scoping, add them if not.
 
 Why this fits the roadmap: making each item a structured quote line with a product and a fabric option row (supplier, range, metres) is exactly what Phase 2 needs to build the BOM and one PO per supplier (maker, fabric supplier, blind supplier). Free text supplier and fabric picked on the web would have to be matched again later.
 
@@ -110,22 +116,54 @@ Codes: the web side never needs supplier or product codes. They stay in FileMake
 | Step | Work | When |
 |---|---|---|
 | A | Phone: blank critical defaults, shared warning file, lock after Measured | Now. Soft furnishings app is in build |
-| B | Admin review screen, edits with log, warning clearance, Mark as checked | Now. No FileMaker dependency, and useful on its own (checked data going to the supplier Excel) |
+| B | Admin review screen, edits with full tracking, warning clearance, Send to FileMaker | Now. No FileMaker dependency, and useful on its own (checked data going to the supplier Excel) |
 | C | Worker feed of Checked surveys (survey design stage 1) | When B is stable |
-| D | FileMaker survey tables, Survey panel, allocation card, Create quote lines | After the Phase 1 gate, Greg's go ahead |
+| D | FileMaker survey tables, Survey panel, allocation card, Send to Curtainwise, return entry, Create quote lines | After the Phase 1 gate, Greg's go ahead |
 | E | Revision differences flagged on quote lines | After D |
 | F | Product and fabric back to the fit job screen | With Phase 2 |
 
-## 8. Open decisions for Greg
+## 8. Decisions
 
-1. **Send to FileMaker on Checked, not Measured.** Changes agreed decision 1 in the FileMaker design. Recommended: yes, FileMaker only receives office checked data.
-2. **Quote line shape.** One quote line per surveyed item (100 room hotel = 100+ lines), or one line per identical spec (type, product, fabric, order size) with a quantity and the room numbers listed? Recommended: grouped by identical spec, with headings per floor or room type; the full room by room schedule stays in the survey and job sheet.
-3. **Fabric metres.** FileMaker calculation (widths = rail x fullness / roll width rounded up, cut drop = finished drop + allowances rounded to the pattern repeat) shown as an editable suggestion, or the maker's figure typed in? Recommended: FileMaker calculation, editable. Needs Greg's allowances for hems and headings per heading type.
-4. **How making and blinds are priced.** The app today has "Sent to supplier for pricing" (for example Curtainwise). If makers and blind suppliers quote each job, FileMaker only needs their cost typed per line. If they have price lists by width and drop, FileMaker needs a price grid per product, which is new scope and probably Phase 2. This answer decides most of the FileMaker build.
-5. **Blank defaults on the phone.** Measurers will have to choose fit, drop reference, heading and lining on every item. Recommended: yes for fit and drop reference at least; a "same as last item" button keeps it fast.
-6. **Office edits to measurements.** Allowed on the web review screen with a full log? Recommended: yes, measurer copy locked after Measured.
+**Agreed (Greg, 2026-10-23)**
+* All warnings are reviewed and cleared on the web admin page, not in FileMaker.
+* Missing and Check warning kinds as in section 3; each warning has its own Checked, correct.
+* Quote lines grouped by identical spec (type, product, fabric, order size) with a quantity and the room numbers listed; headings per floor or room type. The room by room schedule stays in the survey and job sheet.
+* Critical choices (blind fit, drop reference, heading, lining) start blank on the phone and count as Missing until chosen.
+* Fabric metres come from Curtainwise, not a FileMaker calculation: Curtainwise adds heading and workroom allowances and returns metres and making cost, which go into FileMaker.
+* The send to Curtainwise for costing lives in FileMaker, because it needs the fabric allocated to each curtain, with roll width and pattern repeat.
+
+* Only checked surveys go to FileMaker, and the admin team sends them: a **Send to FileMaker** button on the review screen, available once nothing is open. Not automatic on Measured or on Checked. FileMaker picks it up on its next 15 minute pull.
+* Grouping happens in FileMaker, at Create quote lines, after fabrics are allocated. Items only group when type, product, fabric and order size all match, so it cannot be decided on the web side.
+* Roller blinds are made by Excel ([excelgb.com](https://www.excelgb.com), ordering portal [excel.blindata.co.uk](https://excel.blindata.co.uk)), the blind maker, not the spreadsheet. The admin team prices them there and types the costs into FileMaker per line. No price grid needed. Roman blinds are made by Curtainwise and go in the Curtainwise send like curtains.
+* No bulk clear of warnings: each is checked on its own.
+* The office can edit measurements on the review screen. Every change is tracked: field, old value, new value, who, when, plus every warning clearance. The measurer's copy locks after Measured.
+
+**Still open**
+1. **Ask Curtainwise for a CSV or Excel export** of their quotation and fabric summary (section 8a). If they can, FileMaker imports it; if not, the office types the figures for the first version.
+2. **Curtainwise input format.** What they want to receive from us (the file their office keys from), and whether they work in cm (their quotes show cm; the survey is in mm).
+3. **Send to Excel (rollers) from FileMaker too?** One row per blind with order size, fit, control side and type, fabric, as a print or file to key into the Blindata portal. Recommended: yes, as a printable list; the portal is keyed by hand either way unless Excel offers an upload.
+
+## 8a. What Curtainwise sends back (from example PDFs, Q17532 and Q17420)
+
+Two PDFs per job, both carrying **Cust Ref = our Q- number**:
+
+**Quotation** (one line per curtain or roman, grouped by room):
+* `Line #`, `Location` (for example "Solway W1", "Living Doors"), type (Curtain, Roman), width and drop in **cm**, measure basis (Rail Size, Recess), quantity.
+* Fabric (always "Cust Fab", supplied by Elite), number of widths, **fabric amount in metres** (with "Railroad" when turned).
+* Single or pair and side, heading (for example Wave Lined), lining (Curtainwise's own, for example "Cw09 Black Out Ivory FR"), labels, lead weights, extras; romans add control, control unit, rail, stack, child safety, stitch, install height and special instructions.
+* List price, discount (10%), **net price per line** (making, with lining). Room subtotals and job totals with VAT.
+
+**Fabric summary** (one block per fabric):
+* Fabric name, **roll width (mm)** and **pattern repeat (mm)**, then metres per location and type (Main Fabric or Lining), and **Total Quantity Used** per fabric. Lining is listed too, but it is Curtainwise's and inside their price.
+
+What this means for FileMaker:
+* Match lines back by Q- number plus Location. So the send to Curtainwise must give every item a Location that is unique on the job, built from room and window (for example "101 W1"), and Curtainwise must keep it. Then returned figures land on the right survey item without guessing.
+* Per item, FileMaker stores the making cost (net) and the fabric metres. Main fabric metres go on the `Main Fabric` option row (`Quantity`), so cost = metres x per metre cost as now. The making cost is the line's maker cost; Curtainwise is the supplier for that part.
+* The fabric totals per fabric are what Elite orders from the fabric supplier: exactly the Phase 2 PO quantity per fabric supplier. FileMaker can total them from the option rows, so the summary PDF becomes a check, not a source.
+* The PDF text extracts cleanly (tested), so reading the PDFs automatically is possible, but a layout change on their side would break it silently. Prefer a CSV or Excel export from Curtainwise; typed entry with the PDF beside it is the safe first version.
 
 ## 9. Not checked
 
 * The current FileMaker product structure for curtain making and blinds (how they are set up as `Products`, unit of measure, whether a curtain is one product with a fabric option). Need a short extract or Greg's description before scoping step D.
-* `FabricDesignRanges` field list (roll width, repeat, per metre cost) beyond what Standards mentions; needed for decision 3.
+* `FabricDesignRanges` field list: roll width and pattern repeat are needed for the Curtainwise file and are not listed in Standards.
+* The Excel (Blindata) portal: not looked at, whether it takes an upload.
