@@ -163,20 +163,12 @@ Built by Greg with Claude Code and agentic-fm on his Mac (`/Users/gwins/Developm
 
 ## 11. Open decisions
 
-**Survey to FileMaker** (details in [docs/survey-to-filemaker.md](docs/survey-to-filemaker.md) section 9). No spare Claris licence, and custom OAuth does not avoid one, so the draft design has FileMaker pull from a secured Worker feed on a server schedule. Not approved.
-1. Import only finished (measured) surveys, or every draft save? Recommended: finished only.
-2. Must every survey start from a measure? Recommended: yes.
-3. Who owns jobs long term: FileMaker or the admin page? Recommended: FileMaker.
-4. Photos: keep in R2 and view by link, or copy into FileMaker containers? Recommended: R2.
-5. Is a schedule tied to Greg's Claris ID, re-saved yearly, acceptable for now?
-6. Pull frequency: every 15 minutes in working hours, or less?
+**Survey to FileMaker** (details in [docs/survey-to-filemaker.md](docs/survey-to-filemaker.md) section 9): all decisions agreed 2026-10-23. Decision 1 changed the same day: only surveys checked and sent by the admin team go to FileMaker.
 
-**Survey review and quoting** (details in [docs/survey-review-and-quoting.md](docs/survey-review-and-quoting.md) section 8). Agreed 2026-10-23: warnings reviewed and cleared on the web admin page only, Missing and Check kinds, each warning cleared on its own; quote lines grouped by identical spec; critical choices start blank on the phone; fabric metres and making cost come from Curtainwise; the send to Curtainwise for costing lives in FileMaker (fabric per curtain with roll width and pattern repeat). Still open:
-1. Send to FileMaker on Checked (office reviewed), not Measured? Recommended: yes. Changes survey design decision 1.
-2. Office may edit measurements on the review screen with a full log, measurer copy locked after Measured? Recommended: yes.
-3. Blinds: supplier quotes each job, or price list by width and drop (needs a price grid, new scope)?
-4. Curtainwise: what they send back (fixed layout file to import, or typed) and the column layout they want.
-5. Bulk clear shortcut for the same warning on identical items? Recommended: yes.
+**Survey review and quoting** (details in [docs/survey-review-and-quoting.md](docs/survey-review-and-quoting.md) section 8). Agreed 2026-10-23: warnings reviewed and cleared on the web admin page only, Missing and Check kinds, each cleared on its own; admin team sends checked surveys to FileMaker with a button; grouping of quote lines done in FileMaker after fabric allocation; critical choices start blank on the phone; Curtainwise returns fabric metres and making cost, and the send to Curtainwise lives in FileMaker (fabric per curtain with roll width and pattern repeat); blinds priced through the supplier Excel by the admin team, costs typed into FileMaker; office can edit measurements, every change tracked. Still open:
+1. Curtainwise: what they send back (fixed layout file to import, or typed) and the column layout they want.
+2. Bulk clear shortcut for the same warning on identical items? Recommended: yes.
+3. Send to Excel (blinds) from FileMaker like Curtainwise? Recommended: yes if Excel accepts a file.
 
 **Design** (details in [design/elite-design.md](design/elite-design.md) section 8)
 1. Buttons: darker olive #686D1E (passes contrast) or brand olive with larger bold labels?
@@ -189,6 +181,7 @@ Built by Greg with Claude Code and agentic-fm on his Mac (`/Users/gwins/Developm
 
 | Date | What changed |
 |---|---|
+| 2026-10-23 | Survey review: admin team sends checked surveys to FileMaker (survey design decision 1 changed), grouping in FileMaker, blinds priced via Excel by the admin team, office edits allowed and fully tracked. |
 | 2026-10-23 | Survey review and quoting: Greg's answers recorded (web review only, each warning cleared on its own, grouped quote lines, blank defaults, Curtainwise returns metres and making cost, send to Curtainwise from FileMaker). |
 | 2026-10-23 | Survey review and quoting recommendation written (docs/survey-review-and-quoting.md): review and warnings on the web admin page, supplier, fabric and pricing in FileMaker. Open decisions added to section 11. Nothing built. |
 | 2026-10-23 | R2 bucket `elite-surveys` moved to the EU jurisdiction (location hint ignored for a reused name). Test data deleted. Worker redeployed with `jurisdiction: eu` binding. |

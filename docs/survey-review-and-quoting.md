@@ -19,8 +19,8 @@ What Greg asked for ("next to each window pick a supplier and fabric") is delive
 
 ```
 Measurer (phone)        Office (web admin)                 Office (FileMaker)
-measure ──▶ Measured ──▶ Review screen: all data, ──▶ Checked ──▶ pulled in (15 min)
-                         warnings fixed or cleared            Allocate: product + fabric per item
+measure ──▶ Measured ──▶ Review screen: all data, ──▶ Send to  ──▶ pulled in (15 min)
+                         warnings fixed or cleared   FileMaker  Allocate: product + fabric per item
                                                               Create quote lines ──▶ cost ──▶ Q- PDF
 ```
 
@@ -28,7 +28,7 @@ measure ──▶ Measured ──▶ Review screen: all data, ──▶ Checked 
 1. Measurer marks the survey **Measured**. The phone copy locks for the measurer (office can reopen it).
 2. Office opens the survey on the admin page review screen. Every room, window and item with every value entered, photos and sketches, and the warnings.
 3. Office fixes values or clears each warning ("checked, correct"). Every edit and clearance is logged with who and when.
-4. When nothing is open, office presses **Mark as checked**. Only then does the survey appear in the FileMaker feed.
+4. When nothing is open, the admin team presses **Send to FileMaker** (Greg, 2026-10-23). Only then does the survey appear in the FileMaker feed.
 5. FileMaker pulls it against the quote (by Q- number, as agreed). On the quote, office opens **Allocate from survey**: one row per item, pick product and fabric (supplier, range, colour), bulk apply to similar rows.
 6. **Send to Curtainwise for costing** (Greg, 2026-10-23: lives in FileMaker). FileMaker produces the file for the maker: every curtain with its room, window, sizes, heading, lining, and the fabric allocated to it with supplier, range, colour, roll width and pattern repeat. FileMaker is the right place because the fabric allocation is made there.
 7. Curtainwise works out fabric metres (heading allowance and other workroom allowances) and the making cost, and sends them back. Office enters them in FileMaker: metres on each fabric option row, making cost on the line.
@@ -78,7 +78,7 @@ The warning rules must be one shared file used by the phone app, the admin page 
 * Warnings shown next to the field they belong to, with **Edit** and **Checked, correct** buttons.
 * Filter: only items with open warnings. Header: "12 of 14 warnings cleared".
 * Table view: one row per item across the whole job, sortable by type and size. Fastest way to eyeball a 100 room hotel.
-* **Mark as checked** enabled only with nothing open. Sets the survey revision that FileMaker will pull.
+* **Send to FileMaker** enabled only with nothing open. Marks the survey Checked and sets the revision FileMaker will pull. A later office edit needs another Send, and FileMaker flags the differences.
 * Office edits create a new revision, logged as old value, new value, who, when. If the phone later uploads an older revision it is held for review, not allowed to overwrite.
 
 **Worker**
@@ -116,7 +116,7 @@ Codes: the web side never needs supplier or product codes. They stay in FileMake
 | Step | Work | When |
 |---|---|---|
 | A | Phone: blank critical defaults, shared warning file, lock after Measured | Now. Soft furnishings app is in build |
-| B | Admin review screen, edits with log, warning clearance, Mark as checked | Now. No FileMaker dependency, and useful on its own (checked data going to the supplier Excel) |
+| B | Admin review screen, edits with full tracking, warning clearance, Send to FileMaker | Now. No FileMaker dependency, and useful on its own (checked data going to the supplier Excel) |
 | C | Worker feed of Checked surveys (survey design stage 1) | When B is stable |
 | D | FileMaker survey tables, Survey panel, allocation card, Send to Curtainwise, return entry, Create quote lines | After the Phase 1 gate, Greg's go ahead |
 | E | Revision differences flagged on quote lines | After D |
@@ -132,12 +132,15 @@ Codes: the web side never needs supplier or product codes. They stay in FileMake
 * Fabric metres come from Curtainwise, not a FileMaker calculation: Curtainwise adds heading and workroom allowances and returns metres and making cost, which go into FileMaker.
 * The send to Curtainwise for costing lives in FileMaker, because it needs the fabric allocated to each curtain, with roll width and pattern repeat.
 
+* Only checked surveys go to FileMaker, and the admin team sends them: a **Send to FileMaker** button on the review screen, available once nothing is open. Not automatic on Measured or on Checked. FileMaker picks it up on its next 15 minute pull.
+* Grouping happens in FileMaker, at Create quote lines, after fabrics are allocated. Items only group when type, product, fabric and order size all match, so it cannot be decided on the web side.
+* Blinds are priced through the blind supplier Excel (the company, not the spreadsheet). The admin team gets the prices and types the costs into FileMaker per line. No price grid needed.
+* The office can edit measurements on the review screen. Every change is tracked: field, old value, new value, who, when, plus every warning clearance. The measurer's copy locks after Measured.
+
 **Still open**
-1. **Send to FileMaker on Checked, not Measured.** Changes agreed decision 1 in the FileMaker design. Recommended: yes, FileMaker only receives office checked data.
-2. **Office edits to measurements.** Allowed on the web review screen with a full log, measurer copy locked after Measured? Recommended: yes.
-3. **Blinds pricing.** Does the blind supplier quote each job like Curtainwise (cost typed per line), or price from a list by width and drop (needs a price grid per product, new scope)?
-4. **Curtainwise return.** Do they send back a file in a fixed layout (FileMaker can import it) or a PDF or email (office types the figures)? And the column layout they want to receive.
-5. **Bulk clear shortcut** for identical warnings on identical items (section 3). Recommended: yes.
+1. **Curtainwise return.** Do they send back a file in a fixed layout (FileMaker can import it) or a PDF or email (office types the figures)? And the column layout they want to receive.
+2. **Bulk clear shortcut** for identical warnings on identical items (section 3). Recommended: yes.
+3. **Send to Excel (blinds) from FileMaker too?** Same idea as Curtainwise: one row per blind with order size, fit, control side and type, fabric. Recommended: yes, if Excel accepts a file; otherwise the admin team keeps doing it by hand.
 
 ## 9. Not checked
 
