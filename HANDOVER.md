@@ -161,6 +161,7 @@ Built by Greg with Claude Code and agentic-fm on his Mac (`/Users/gwins/Developm
 * Surveys started without a measure get a 4 character random id: not safe as a key in FileMaker. Needs a full UUID (integration stage 0). No revision counter yet.
 * Photos upload inline as base64 in one request (up to 40 MB), which fails on poor signal. Split into one upload per photo.
 * Bed survey has no cloud upload at all.
+* Soft furnishings app works in mm; Greg wants cm everywhere (one decimal), to change with the review work.
 * Soft furnishings app pre-fills critical choices (blind fit "Inside the recess", drop "Track to floor", pencil pleat, lined). Defaults look like measured answers. The app also computes sizes only, no fabric metres.
 * Brand mismatches in the soft furnishings app: 11 listed in [design/elite-design.md](design/elite-design.md) section 6. To fix against the design file.
 
@@ -169,9 +170,9 @@ Built by Greg with Claude Code and agentic-fm on his Mac (`/Users/gwins/Developm
 **Survey to FileMaker** (details in [docs/survey-to-filemaker.md](docs/survey-to-filemaker.md) section 9): all decisions agreed 2026-10-23. Decision 1 changed the same day: only surveys checked and sent by the admin team go to FileMaker.
 
 **Survey review and quoting** (details in [docs/survey-review-and-quoting.md](docs/survey-review-and-quoting.md) section 8). Agreed 2026-10-23: warnings reviewed and cleared on the web admin page only, Missing and Check kinds, each cleared on its own; admin team sends checked surveys to FileMaker with a button; grouping of quote lines done in FileMaker after fabric allocation; critical choices start blank on the phone; Curtainwise returns fabric metres and making cost, and the send to Curtainwise lives in FileMaker (fabric per curtain with roll width and pattern repeat); roller blinds made by Excel (excelgb.com, Blindata portal) and priced there by the admin team, costs typed into FileMaker; roman blinds made by Curtainwise; no bulk clear of warnings; office can edit measurements, every change tracked. Still open:
-1. Ask Curtainwise for a CSV or Excel export of their quotation and fabric summary (today two PDFs, Cust Ref = Q- number, sizes in cm, per line net price and fabric metres, per fabric roll width and pattern repeat). Otherwise typed entry first.
-2. What input format Curtainwise wants from us, and cm or mm.
-3. Printable roller blind list from FileMaker for keying into the Excel portal? Recommended: yes.
+Also agreed: everything in cm (one decimal allowed), and Curtainwise CSV or Excel exports are imported into FileMaker, matched by Q- number and Location, confirmed by the office.
+1. What input format Curtainwise wants from us; a sample of their CSV or Excel export for the import mapping.
+2. Excel (rollers): how orders go into the Blindata portal and whether it takes an upload. Recommended: printable roller list from FileMaker.
 
 **Design** (details in [design/elite-design.md](design/elite-design.md) section 8)
 1. Buttons: darker olive #686D1E (passes contrast) or brand olive with larger bold labels?
@@ -186,6 +187,7 @@ Built by Greg with Claude Code and agentic-fm on his Mac (`/Users/gwins/Developm
 |---|---|
 | 2026-10-23 | Access: staff login confirmed Microsoft only with Instant Auth (infra item 2 staff part done). Token given Access Apps and Policies Edit; Claude changes Access only when Greg asks. |
 | 2026-10-23 | Soft furnishings PR #3: people list (Greg edits), measurers and fitters see only their own jobs, external email PIN users allowed only while in the list, admin dropdowns. Not deployed. Access item 2 split into "Microsoft only now" and the Scot options. |
+| 2026-10-23 | Survey review: everything in cm; Curtainwise CSV or Excel export imported into FileMaker. |
 | 2026-10-23 | Survey review: Curtainwise example PDFs read (two per job, matched by Q- number and Location); no bulk warning clear; rollers by Excel (blind maker), romans by Curtainwise. |
 | 2026-10-23 | Survey review: admin team sends checked surveys to FileMaker (survey design decision 1 changed), grouping in FileMaker, blinds priced via Excel by the admin team, office edits allowed and fully tracked. |
 | 2026-10-23 | Survey review and quoting: Greg's answers recorded (web review only, each warning cleared on its own, grouped quote lines, blank defaults, Curtainwise returns metres and making cost, send to Curtainwise from FileMaker). |
