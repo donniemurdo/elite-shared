@@ -144,7 +144,7 @@ Codes: the web side never needs supplier or product codes. They stay in FileMake
 
 **Still open**
 1. **Curtainwise input format.** What they want to receive from us, ideally the same columns as their export so the round trip matches.
-2. **Excel (rollers):** how orders go into the Blindata portal, and whether it takes an upload. Recommended: a printable roller list from FileMaker either way.
+2. **Excel (rollers):** keyed by hand (section 8b). Recommended: a printable roller list from FileMaker. Size units still to confirm.
 3. A sample Curtainwise CSV or Excel export, to fix the import mapping.
 
 ## 8a. What Curtainwise sends back (from example PDFs, Q17532 and Q17420)
@@ -166,8 +166,16 @@ What this means for FileMaker:
 * The fabric totals per fabric are what Elite orders from the fabric supplier: exactly the Phase 2 PO quantity per fabric supplier. FileMaker can total them from the option rows, so the summary PDF becomes a check, not a source.
 * Curtainwise can export CSV or Excel (Greg, 2026-10-23), so FileMaker imports that instead of reading the PDFs.
 
+## 8b. Excel blind portal (excel.blindata.co.uk, read 2026-10-23)
+
+* Orders are keyed in by hand: no import or upload option seen.
+* Order header: account (ELI08), customer and delivery address, order and required dates, Customer Order No, **Customer Reference** (put the Q- number here, as with Curtainwise), Measure Type (Metric).
+* Each blind: Blind Type, Measurement (Metric), **Fabric and Fabric Code from Excel's own list**, Location, Instructions, Measure To, then type dependent options and sizes (not seen yet: they appear once a blind type is chosen). Quantity, Base Price, Options Price, Discount %, Net Price, VAT, Total per blind.
+* So for rollers: the fabric is Excel's own range, not customer supplied. In FileMaker that is a fabric range (or product) under supplier Excel, so the allocation card picks it like any other. The admin team keys each blind into the portal from a printable roller list (Location as "room window", same as Curtainwise), then copies the Net Price per blind back into FileMaker.
+* "Metric" is probably mm; to confirm once a blind type shows the size fields. If so, the roller list shows mm for Excel while everything else stays in cm.
+
 ## 9. Not checked
 
 * The current FileMaker product structure for curtain making and blinds (how they are set up as `Products`, unit of measure, whether a curtain is one product with a fabric option). Need a short extract or Greg's description before scoping step D.
 * `FabricDesignRanges` field list: roll width and pattern repeat are needed for the Curtainwise file and are not listed in Standards.
-* The Excel (Blindata) portal: not looked at, whether it takes an upload.
+* Excel portal size and option fields per blind type, and whether Metric means mm.

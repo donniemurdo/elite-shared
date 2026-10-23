@@ -173,7 +173,7 @@ Built by Greg with Claude Code and agentic-fm on his Mac (`/Users/gwins/Developm
 **Survey review and quoting** (details in [docs/survey-review-and-quoting.md](docs/survey-review-and-quoting.md) section 8). Agreed 2026-10-23: warnings reviewed and cleared on the web admin page only, Missing and Check kinds, each cleared on its own; admin team sends checked surveys to FileMaker with a button; grouping of quote lines done in FileMaker after fabric allocation; critical choices start blank on the phone; Curtainwise returns fabric metres and making cost, and the send to Curtainwise lives in FileMaker (fabric per curtain with roll width and pattern repeat); roller blinds made by Excel (excelgb.com, Blindata portal) and priced there by the admin team, costs typed into FileMaker; roman blinds made by Curtainwise; no bulk clear of warnings; office can edit measurements, every change tracked. Still open:
 Also agreed: everything in cm (one decimal allowed), and Curtainwise CSV or Excel exports are imported into FileMaker, matched by Q- number and Location, confirmed by the office.
 1. What input format Curtainwise wants from us; a sample of their CSV or Excel export for the import mapping.
-2. Excel (rollers): how orders go into the Blindata portal and whether it takes an upload. Recommended: printable roller list from FileMaker.
+2. Excel (rollers): portal has no upload, orders keyed by hand, Q- number in Customer Reference, fabric from Excel's own list, net price per blind. Recommended: printable roller list from FileMaker. Size units (Metric, probably mm) to confirm.
 
 **Design** (details in [design/elite-design.md](design/elite-design.md) section 8)
 1. Bed survey brand: Beds (retail) or CF (hotels)?
@@ -185,6 +185,7 @@ Also agreed: everything in cm (one decimal allowed), and Curtainwise CSV or Exce
 
 | Date | What changed |
 |---|---|
+| 2026-10-23 | Excel blind portal read: hand keyed, no upload; fields recorded in docs/survey-review-and-quoting.md section 8b. |
 | 2026-10-23 | Soft furnishings v14 live (PR #4, includes PR #3): UI redesign with menu and separate sign out, brand applied, blank critical choices, fabric allocation left to FileMaker, all sizes in cm (mm surveys converted on load). Olive #686D1E buttons approved by Greg. |
 | 2026-10-23 | Access: staff login confirmed Microsoft only with Instant Auth (infra item 2 staff part done). Token given Access Apps and Policies Edit; Claude changes Access only when Greg asks. |
 | 2026-10-23 | Soft furnishings PR #3: people list (Greg edits), measurers and fitters see only their own jobs, external email PIN users allowed only while in the list, admin dropdowns. Not deployed. Access item 2 split into "Microsoft only now" and the Scot options. |
