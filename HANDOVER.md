@@ -180,9 +180,7 @@ Also agreed: everything in cm (one decimal allowed), and Curtainwise CSV or Exce
 2. Excel (rollers): keyed by hand, sizes in mm, Q- number in Customer Reference. Measure To: Recess Size for inside the recess (Excel deducts, send recess as measured, app roller deduction stays 0), Blind Size for outside (send our order size); Cloth Size unused. Excel calculates control length from install height. Recommended: printable roller list from FileMaker.
 3. `FabricDesignRanges` has no roll width or pattern repeat (Greg, 2026-10-23). To add in EliteFM: `RollWidth` and `PatternRepeat`, Number, cm, on `UI_Fabric_Edit_Card`. On the EliteFM roadmap, not gated.
 
-**Design** (details in [design/elite-design.md](design/elite-design.md) section 8)
-1. Bed survey brand: Beds (retail) or CF (hotels)?
-2. SVG logo files from the designer.
+**Design:** nothing open. Bed survey uses Elite CF; no SVG logos exist, the PNGs in `design/logos/` are the masters ([design/elite-design.md](design/elite-design.md) section 8).
 
 **EliteFM:** see [Docs/STATUS.md](https://github.com/donniemurdo/EliteFM/blob/main/Docs/STATUS.md) "Next session". As of 2026-10-09: finishing the `UI_Quote_Print` sliding test, then the quote send script. Survey import is not on the EliteFM roadmap; no FileMaker survey tables before Greg's go ahead and the Phase 1 gate.
 
@@ -190,6 +188,7 @@ Also agreed: everything in cm (one decimal allowed), and Curtainwise CSV or Exce
 
 | Date | What changed |
 |---|---|
+| 2026-10-23 | Design decisions closed: bed survey brand is Elite CF, no SVG logos (PNGs are masters), olive #686D1E confirmed. |
 | 2026-10-23 | `FabricDesignRanges` confirmed to have no roll width or pattern repeat; two fields specified and added to the EliteFM roadmap. |
 | 2026-10-23 | Soft furnishings v16 (PR #6) live, version c6ebff7d: supplier Excel is the Curtainwise file for now, with no client details or notes and a Location per item. Excel Measure To options recorded. |
 | 2026-10-23 | Soft furnishings v15 live (PR #5): expired sign in fix, office fabric screens back as an interim. |

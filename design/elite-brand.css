@@ -7,7 +7,7 @@
   /* Brand palette: Elite CF */
   --brand-primary: #0A1F4A;       /* Navy: headings, header bands, backdrops */
   --brand-action: #777D23;        /* Olive: buttons */
-  --brand-action-text: #686D1E;   /* Olive darkened for white text at 16px (5.5:1). Pending Greg's OK, see design doc */
+  --brand-action-text: #686D1E;   /* Olive darkened for white text at 16px (5.5:1). Approved by Greg 2026-10-23 */
   --brand-highlight: #C3CB4D;     /* Kiwi: highlights only, never text on light backgrounds */
   --brand-light: #FCFCFC;         /* White */
   --brand-neutral: #3A3A3A;       /* Charcoal: body text */

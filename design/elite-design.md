@@ -14,7 +14,7 @@ Every app takes its colours, fonts, buttons and forms from this file. If somethi
 | Soft furnishings survey (phone) | **Elite CF** | Contract work for hotels, care homes, restaurants. The app already uses a near CF palette. |
 | Office admin page | **Elite CF** | Internal tool, same company. |
 | FileMaker (EliteFM) | **Elite CF** | House brand for internal systems. Quote and invoice outputs could switch per brand later. |
-| Bed survey | **To confirm** (on hold) | Beds if surveys are for retail home customers, CF if for hotel beds. |
+| Bed survey | **Elite CF** (on hold) | Used by Elite Contract Furniture for business customers (Greg, 2026-10-23). |
 | FF&E | Customer facing outputs only | No app for FF&E work yet. |
 
 Rule: internal tools use CF. Beds and FF&E styling applies only to things a Beds or FF&E customer sees (PDFs, emails, quotes).
@@ -69,7 +69,7 @@ The brand Olive with white text is just under the accessibility minimum, which m
 * Header band: primary logo (white on Navy). Light screens and printouts: secondary (Navy on white).
 * Use the image, do not retype "Elite" in a font. The wordmark is not Poppins.
 * Minimum height on screen: 32px for the wordmark.
-* Current files in [logos/](logos/) are 1100px PNGs taken from the PDFs. **Ask the designer for SVG versions** for sharp rendering and small file size.
+* The 1100px PNGs in [logos/](logos/), taken from the PDFs, are the master files. No SVG exists (Greg, 2026-10-23). Shown at header size they stay sharp; do not scale them above 1100px wide.
 
 **Type**
 * Phones: page title 28px, section heading 21px, card title 18px, body 16px.
@@ -112,7 +112,7 @@ Checked against `donniemurdo/elite-softfurnishing-survey` main (app/_head.html, 
 | 6 | Primary buttons (survey and admin) | Navy fill | Olive fill | Use --brand-action-text |
 | 7 | Admin "alt" buttons | Kiwi fill | Kiwi is highlights only | Secondary style |
 | 8 | Body text | Navy | Charcoal, Navy for headings | Swap |
-| 9 | Header wordmark | "Elite" typed in Georgia | Logo image | Use primary logo PNG, SVG later |
+| 9 | Header wordmark | "Elite" typed in Georgia | Logo image | Use primary logo PNG |
 | 10 | Heading sizes | h1 30px, h2 20px, card titles 18 to 26px | 21 / 28 / 37 | Use scale in section 4 |
 | 11 | Back link in header | Kiwi text on Navy | Highlights only | Passes contrast, minor. Change to white |
 
@@ -120,10 +120,13 @@ Already matching: Kiwi accent stripe and tile edges, 48px touch targets, 8px inp
 
 ## 7. Bed survey (on hold)
 
-Uses an unrelated palette (grey blue with yellow #F2B705) and Arial Narrow. Restyle once its brand is confirmed and work restarts.
+Uses an unrelated palette (grey blue with yellow #F2B705) and Arial Narrow. Restyle to Elite CF, the same as the soft furnishings app, when work restarts.
 
-## 8. Open points
+## 8. Decisions
 
-1. Bed survey brand: Beds or CF.
-2. SVG logo files from the designer.
-3. Home for this file: a shared project repo (expected `donniemurdo/elite-shared`). Each app keeps its own copy of elite-brand.css and the fonts so it still works offline.
+* Buttons: darker Olive #686D1E approved (Greg, 2026-10-23).
+* Bed survey brand: Elite CF (Greg, 2026-10-23).
+* Logos: no SVG available; the PNGs are the masters.
+* Home: `design/` in `donniemurdo/elite-shared`. Each app keeps its own copy of elite-brand.css and the fonts so it still works offline.
+
+No open design points.
