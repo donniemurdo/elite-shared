@@ -4,6 +4,17 @@ Last updated: 23 October 2026.
 
 Read this before starting any piece of work. At the end of each piece of work, update the Done, To do, Infrastructure and Open sections, add a line to the change log, and change the existing line rather than adding a competing one. Where this note and a repo disagree, the repo wins; fix the note.
 
+## How we work
+
+This is the working method unless a better way comes up (Greg, 2026-10-23).
+
+* **GitHub is the link** between this project (claude.ai) and Claude Code in VS Code on Greg's Mac. There is no live sync between them.
+* **Pull before, push after.** Every session pulls the repos before starting and pushes when done, so both sides see the same code.
+* **This note is the shared memory.** Claude Code on the Mac does not see the project chat or its memory. Each repo's `CLAUDE.md` points here and to `design/`.
+* **Where work happens:** FileMaker work in VS Code with agentic-fm on Greg's Mac. App and Cloudflare work in this project.
+* **Remote Control:** a project thread can run Claude Code on Greg's Mac by Remote Control, with Greg's approval, when a task needs the Mac.
+* **EliteFM:** its `CLAUDE.md` is left as it is because agentic-fm relies on it, so it does not point here. When FileMaker work affects the survey apps or this note, update this note as well.
+
 ## 1. Ownership
 
 This project owns the code, the Cloudflare setup, the repos, tests and this note. For anything outside the code (Cloudflare settings, R2, Access, Teams, GitHub): do what the tools allow, otherwise give Greg exact steps or commands and track it in section 9 until Greg confirms it is done.
@@ -189,6 +200,7 @@ Also agreed: everything in cm (one decimal allowed), and Curtainwise CSV or Exce
 
 | Date | What changed |
 |---|---|
+| 2026-10-23 | "How we work" section added (GitHub is the link, pull before and push after, FileMaker in VS Code, apps and Cloudflare in the project). `CLAUDE.md` pointers added to elite-shared, elite-softfurnishing-survey and elite-bed-survey. EliteFM `CLAUDE.md` unchanged. |
 | 2026-10-23 | Old morning-queen-dc99 Worker deleted by Greg and checked (infra item 4 done). |
 | 2026-10-23 | Soft furnishings v17 (PR #7) live, version dcdd5935: People page email box fix. |
 | 2026-10-23 | Design decisions closed: bed survey brand is Elite CF, no SVG logos (PNGs are masters), olive #686D1E confirmed. |
