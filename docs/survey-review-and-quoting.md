@@ -68,6 +68,7 @@ The warning rules must be one shared file used by the phone app, the admin page 
 
 **Phone app**
 * Critical choices start blank (section 3).
+* All measurements in cm with one decimal place allowed; warning thresholds and help text change from mm to cm (for example the unit slip warning becomes "under 10 cm").
 * Survey locks for the measurer after Measured; office can reopen.
 * Warning rules moved into one shared file; each warning gets a stable code.
 * The office status list in the phone app (checked, fabrics allocated, sent to supplier, priced, approved, ordered) retires once FileMaker is live; FileMaker owns everything after Checked.
@@ -138,10 +139,13 @@ Codes: the web side never needs supplier or product codes. They stay in FileMake
 * No bulk clear of warnings: each is checked on its own.
 * The office can edit measurements on the review screen. Every change is tracked: field, old value, new value, who, when, plus every warning clearance. The measurer's copy locks after Measured.
 
+* **Everything in cm** (Greg, 2026-10-23): the phone app, admin page, feed and Curtainwise file all use cm, matching FileMaker and Curtainwise. Allow one decimal place (for example 122.5) so blind sizes and deductions keep 5 mm precision. Existing surveys in mm are converted once when the change ships.
+* **Curtainwise can export CSV or Excel** (Greg, 2026-10-23). FileMaker imports the quotation and fabric summary export, matched by Q- number and Location, and shows it for the office to confirm before anything is written to quote lines. No PDF reading, no typing.
+
 **Still open**
-1. **Ask Curtainwise for a CSV or Excel export** of their quotation and fabric summary (section 8a). If they can, FileMaker imports it; if not, the office types the figures for the first version.
-2. **Curtainwise input format.** What they want to receive from us (the file their office keys from), and whether they work in cm (their quotes show cm; the survey is in mm).
-3. **Send to Excel (rollers) from FileMaker too?** One row per blind with order size, fit, control side and type, fabric, as a print or file to key into the Blindata portal. Recommended: yes, as a printable list; the portal is keyed by hand either way unless Excel offers an upload.
+1. **Curtainwise input format.** What they want to receive from us, ideally the same columns as their export so the round trip matches.
+2. **Excel (rollers):** how orders go into the Blindata portal, and whether it takes an upload. Recommended: a printable roller list from FileMaker either way.
+3. A sample Curtainwise CSV or Excel export, to fix the import mapping.
 
 ## 8a. What Curtainwise sends back (from example PDFs, Q17532 and Q17420)
 
@@ -160,7 +164,7 @@ What this means for FileMaker:
 * Match lines back by Q- number plus Location. So the send to Curtainwise must give every item a Location that is unique on the job, built from room and window (for example "101 W1"), and Curtainwise must keep it. Then returned figures land on the right survey item without guessing.
 * Per item, FileMaker stores the making cost (net) and the fabric metres. Main fabric metres go on the `Main Fabric` option row (`Quantity`), so cost = metres x per metre cost as now. The making cost is the line's maker cost; Curtainwise is the supplier for that part.
 * The fabric totals per fabric are what Elite orders from the fabric supplier: exactly the Phase 2 PO quantity per fabric supplier. FileMaker can total them from the option rows, so the summary PDF becomes a check, not a source.
-* The PDF text extracts cleanly (tested), so reading the PDFs automatically is possible, but a layout change on their side would break it silently. Prefer a CSV or Excel export from Curtainwise; typed entry with the PDF beside it is the safe first version.
+* Curtainwise can export CSV or Excel (Greg, 2026-10-23), so FileMaker imports that instead of reading the PDFs.
 
 ## 9. Not checked
 
