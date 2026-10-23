@@ -58,24 +58,28 @@ Answer to the custom OAuth question: no, it would not give the Worker access wit
 | `GET /api/fm/surveys?after=<cursor>&limit=25` | Finished surveys since the cursor. Flattened JSON: header, fabrics, and one row per treatment with its room and window. No photo data, only photo keys. |
 | `POST /api/fm/ack` `{ "items":[{"surveyId","revision","fmId"}] }` | FileMaker confirms what it committed. Worker records it and the last good poll time. |
 | `GET /api/fm/photo/<key>` | One photo for a web viewer link. Photos stay in R2, not FileMaker containers (Cloud storage is limited per user). |
-| `PUT /api/fm/quotes` | FileMaker pushes soft furnishing quotes: `QuoteSerialNumber`, Q- number, S- number once ordered, `CompanyID`, client name, contact, phone, email, site / delivery address and postcode, customer reference. The Worker keeps a copy. |
+| `PUT /api/fm/quotes` | FileMaker pushes quote headers (all quotes) and soft furnishing jobs (measure or fit only): `QuoteSerialNumber`, Q- number, S- number once ordered, `CompanyID`, client name, contact, phone, email, site / delivery address and postcode, customer reference. The Worker keeps a copy. |
 | `GET /api/quote/Q-000123` (staff) | Admin page and app look up a Q- number and fill in the client data from that copy. |
 
 Feed: when a survey is marked measured (or fitted), the Worker writes a small index object `feed/<ISO time>-<surveyId>-<revision>.json` in the existing R2 bucket. Cursor is the last key read (R2 `list` with `startAfter`). No new storage service.
 
 The Worker does the flattening, so the FileMaker script is a plain loop of `JSONGetElement` and Set Field, and changes to the phone app's internal layout don't break FileMaker as long as the feed format stays the same.
 
-### Q- number lookup: how it really works
+### Creating a job and the Q- number lookup
 
-The Worker cannot ask FileMaker live (that needs the Data API and a licence, section 2). So FileMaker sends quote details to the Worker ahead of time, and the lookup reads that copy:
+The office decides which quotes need a measure or fit; there is no automatic filter. Two ways in, same result:
 
-- When a soft furnishing quote is saved in FileMaker, a script sends its details to the Worker with Insert from URL (from the user's own FileMaker session, so no extra licence).
-- The 15 minute schedule also sends any quotes changed since the last run, as a backstop if a send failed.
-- Typing `Q-000123` on the admin page (or in the app) fills in client, contact and site from the copy. A measure is created against that number; its id becomes the Q- number, so the survey id is the Q- number too.
-- When the quote is ordered, FileMaker sends the S- number and the measure shows as a fit job under the same serial.
-- The phone keeps the jobs list for offline use, as it does now.
+1. **From FileMaker:** on the quote, tick "Soft furnishing job" and answer **Measure or Fit only?** A script sends the job to the Worker with Insert from URL (from the user's own FileMaker session, so no extra licence). It is already linked to the Q- number.
+2. **From the admin page:** New job, answer **Measure or Fit only?**, type `Q-000123`. Client, contact and site fill in from the Worker's copy of the quote.
 
-Customer details are then edited in FileMaker only; the admin page shows them read only.
+How the copy works: the Worker cannot ask FileMaker live (needs the Data API and a licence, section 2). So FileMaker sends the client details of **every** quote on save (header only: number, company, contact, site, reference; no prices). Small, and it means any Q- number can be looked up. The 15 minute schedule also resends quotes changed since the last run, in case a send failed.
+
+Rules:
+- One job per Q- number. The job id is the Q- number, so the survey id is too. Creating a second job for the same Q- number from either side opens the existing one instead of making a duplicate.
+- A job holds both visits, as it does now: the measure (date, measurer) and the fit (date, fitter). "Fit only" is the existing `fitOnly` flag; the measure part is skipped.
+- When the quote is ordered, FileMaker sends the S- number; the job shows it and is ready to book the fit.
+- A Q- number not found in the copy (for example FileMaker has not sent it yet): the admin page says so and offers to retry; it does not let the office type client details by hand.
+- Customer details are edited in FileMaker only; the admin page shows them read only. The phone keeps the jobs list for offline use, as now.
 
 ## 6. FileMaker side (when it is built)
 
@@ -126,7 +130,7 @@ EliteFM is in Phase 1 (quote PDF and email); there are no Survey, Sale or Order 
 4. **Agreed.** Photos stay in Cloudflare R2, viewed by link.
 5. **Agreed.** The schedule runs under Greg's Claris ID; Greg re-saves it in Admin Console once a year.
 6. **Agreed.** Pull every 15 minutes in working hours. Cost: Insert from URL is not the Data API, so the Data API allowance does not apply. About 40 calls a day on the Cloudflare side, far inside the Workers and R2 free allowances.
-7. **Open.** Which quotes count as soft furnishing (for example a quote type or product category), so only those are sent to the Worker.
+7. **Agreed.** The office creates each soft furnishing job explicitly, from a FileMaker checkbox or the admin page, answering Measure or Fit only, and links it to the Q- number. All quote headers are sent to the Worker so any Q- number can be looked up.
 
 ## 10. Not checked
 
