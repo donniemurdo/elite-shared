@@ -8,7 +8,7 @@ Read this before starting any piece of work. At the end of each piece of work, u
 
 This project owns the code, the Cloudflare setup, the repos, tests and this note. For anything outside the code (Cloudflare settings, R2, Access, Teams, GitHub): do what the tools allow, otherwise give Greg exact steps or commands and track it in section 9 until Greg confirms it is done.
 
-At the end of every piece of work Greg gets: an updated zip of the changed app, and this note brought up to date.
+At the end of every piece of work Greg gets: the changes on GitHub (a PR per repo, no zip needed, Greg 2026-10-23), and this note brought up to date.
 
 ## 2. About Greg and the goal
 
@@ -47,7 +47,7 @@ Built by Greg with Claude Code and agentic-fm on his Mac (`/Users/gwins/Developm
 **Hosting and deploy**
 * One Cloudflare Worker, `elite-surveys`, serves both apps. `run_worker_first` is on, so the Worker handles every request. workers.dev and preview URLs are off on purpose.
 * The bed app is not deployed from its own repo: copy its files into `public/beds/` of the soft furnishings repo and deploy from there.
-* Release: `./build.sh` (joins `app/` parts into `public/index.html`), bump the cache name in `public/sw.js` and `APP_VERSION` in `app/_p6.js` (they are separate), then `npx wrangler deploy`. Phones only update after the cache name changes. There is an in app update banner, and a sign out and update screen that requires a saved draft file first.
+* Release: `./build.sh` (joins `app/` parts into `public/index.html`), bump the cache name in `public/sw.js` and `APP_VERSION` in `app/_p6.js` to the same number (both v13 as of 2026-10-23), run `npm test`, then `npx wrangler deploy`. Phones only update after the cache name changes. There is an in app update banner, and a sign out and update screen that requires a saved draft file first.
 * Deploys can run from the project cloud environment (scoped Cloudflare token). Any deploy needs Greg's go ahead, and anything that might break the live app on site is flagged before shipping.
 
 **Apps**
@@ -103,21 +103,21 @@ Built by Greg with Claude Code and agentic-fm on his Mac (`/Users/gwins/Developm
 * Shared design file drafted from the brand PDFs.
 * Survey to FileMaker data flow design agreed in principle: [docs/survey-to-filemaker.md](docs/survey-to-filemaker.md). Key: every measure comes from a FileMaker quote and is keyed by its Q- number (S- once ordered, same serial); FileMaker pushes quote and client data to the Worker so a Q- number fills in the client; FileMaker pulls finished surveys every 15 minutes via a server schedule under Greg's Claris ID (re-save yearly). No extra Claris licence needed. Open: how FileMaker marks a quote as soft furnishing. Nothing built.
 * This shared repo and note created.
+* Tests fixed: `npm install`, then `./build.sh && npm test` runs all 7 files from the repo (Playwright for app and admin, Node for the Worker).
+* Release v13 (soft furnishings PR #1, **not yet deployed**): office notes (access and parking, notes for the measurer or fitter) shown in full in a Kiwi "Read before you start" box at the top of the job screen, plus a "Notes, read first" chip on job list cards; phone and pin icons on Call and Directions; admin New measure shows only measure fields and New fit only fit fields (Edit and Duplicate show all).
 
 ## 7. To do next (in this order unless Greg says otherwise)
 
-1. Make the admin notes (access and parking, notes for the fitter or measurer) stand out much more on the job screen.
-2. Add icons to the Call and Directions buttons.
-3. Admin form bug: New measure also shows the fitting fields. New measure should show only measure fields, New fit only fit fields.
-4. People list in admin: measurers, fitters and sales reps (reps sometimes measure), each with name, email and role. Measurer and fitter fields become dropdowns with a way to enter someone else. **Ask Greg:** who can edit the list (just Greg, or the office team too)?
-5. External fitter: one outside fitter sees only jobs assigned to him; no full job list, no admin page, no other people's backups. Needs the Worker to allow named external emails and the Access policy changed (Greg makes the Access change; give him the steps). **Ask Greg:** does he have a Microsoft account, or should he use a one time PIN?
-6. Blind child safety:
+1. Deploy release v13 once Greg OKs it, then check it on a phone.
+2. People list in admin: measurers, fitters and sales reps (reps sometimes measure), each with name, email and role. Measurer and fitter fields become dropdowns with a way to enter someone else. Greg alone edits the list and other settings as administrator; the office team adds and edits jobs (Greg, 2026-10-23).
+3. External fitter: one outside fitter sees only jobs assigned to him; no full job list, no admin page, no other people's backups. Needs the Worker to allow named external emails and the Access policy changed (Greg makes the Access change; give him the steps). Greg's answers (2026-10-23): measurers see only their own jobs. Measurers are Scot Rigby (external) and David MacFarlane (Elite). Scot is also the one outside fitter. He has no Elite M365 account and signs in with the Cloudflare Access emailed PIN; only Scot may use the PIN. Adding him is deferred until near his first measure or fit.
+4. Blind child safety:
    * Hanging height per blind (floor to top of blind).
    * Chain length to order = hanging height minus 1500 mm, rounded down to 10 mm. Chains are made to measure, so any length is allowed.
    * Warn if the chain would be under about 500 mm, or if hanging height is missing (Check screen and when marking measured).
    * Required safety device per chain operated blind: tensioner fixed to wall, breakaway, or chain break.
    * All of it in the Excel export.
-7. Later: FileMaker format Excel export (Greg supplies the format), cloud backup for the bed survey, Curtainwise column template, brand fonts and logo, possibly an import of jobs from FileMaker (check the DDR first). Survey to FileMaker stage 0 (UUID survey ids, revision counter) fits here, see section 10.
+5. Later: FileMaker format Excel export (Greg supplies the format), cloud backup for the bed survey, Curtainwise column template, brand fonts and logo, possibly an import of jobs from FileMaker (check the DDR first). Survey to FileMaker stage 0 (UUID survey ids, revision counter) fits here, see section 10.
 
 ## 8. Rules
 
@@ -135,20 +135,20 @@ Built by Greg with Claude Code and agentic-fm on his Mac (`/Users/gwins/Developm
 
 | # | Action | Who | Status |
 |---|---|---|---|
-| 1 | Move R2 bucket `elite-surveys` from North America to Western Europe. Location cannot be changed: empty, delete, then `npx wrangler r2 bucket create elite-surveys --location weur`. Worker binds by name, so only a redeploy is needed. Contents are test data, but list exactly what will be lost and get Greg's OK before deleting. | Claude, after Greg's OK | Open |
-| 2 | Cloudflare Access on the measure app: untick One time PIN / Cloudflare login so only Microsoft shows, and turn on Instant authentication. | Greg (steps from Claude) | Open |
+| 1 | Move R2 bucket `elite-surveys` from North America to Western Europe. Location cannot be changed: empty, delete, then `npx wrangler r2 bucket create elite-surveys --location weur`. Worker binds by name, so only a redeploy is needed. Contents are test data, but list exactly what will be lost and get Greg's OK before deleting. | Claude | Greg approved deleting the test objects and moving the bucket (2026-10-23). Open until done and confirmed |
+| 2 | Cloudflare Access on the measure app: Microsoft for staff, emailed PIN for Scot only. Until Scot is added: untick One time PIN so only Microsoft shows, and Instant authentication can be on. When Scot is added: re-tick One time PIN, add a policy that allows only Scot's email with login method One time PIN, require the Microsoft login method on the staff policy, and turn Instant authentication off (it only works with one login method). | Greg (steps from Claude) | Open |
 | 3 | Teams: `TEAMS_WEBHOOK_URL` is already set as a Worker secret (seen by the 2026-10-23 deploy check). Still to do: live test with a real booking; a card should appear in Measure & Fit with the measurer mentioned. | Greg tests | Open, live test unconfirmed |
 | 4 | Measurers move to the new address (save a draft file first, then re add the Home Screen icon). Bed app is at `/beds/`. Retire the old morning-queen-dc99 workers.dev address. | Greg and measurers | Open |
 | 5 | Push both repos to GitHub (private). | Claude | **Done 2026-10-23** |
 | 6 | Optional: Google Places key for address lookup (`npx wrangler secret put GOOGLE_MAPS_KEY`). | Greg | Open, optional |
-| 7 | Still unanswered: should measurers see all jobs (now everyone does, with a Mine filter)? Import jobs from FileMaker? | Greg | Open |
+| 7 | Measurers see only their own jobs (Greg, 2026-10-23; to build with to do item 3). Still unanswered: import jobs from FileMaker? | Greg | Open |
 
 ## 10. Known issues and gotchas
 
-* Tests in `tests/` (Playwright for the app and admin, plain Node for the Worker with mocked R2 and Access tokens) have hardcoded paths from the old scratch environment (for example `/home/claude/elite-surveys/src/worker.js`). Fix the paths, then run all of them after every change.
+* Tests: run `./build.sh && npm test` after every change. On a new machine run `npx playwright install chromium` once.
 * `fitOnly` is handled by its own line in `cleanMeasure` and is not in the `MFIELDS` list.
 * Fit completion photos are job level, not per item.
-* `APP_VERSION` and the service worker cache name are separate; update both on release. At push time they were out of step (`v11` and `curtain-survey-v12`).
+* `APP_VERSION` and the service worker cache name are separate; keep them on the same number (v13 and `curtain-survey-v13` from release v13).
 * Surveys started without a measure get a 4 character random id: not safe as a key in FileMaker. Needs a full UUID (integration stage 0). No revision counter yet.
 * Photos upload inline as base64 in one request (up to 40 MB), which fails on poor signal. Split into one upload per photo.
 * Bed survey has no cloud upload at all.
@@ -175,5 +175,6 @@ Built by Greg with Claude Code and agentic-fm on his Mac (`/Users/gwins/Developm
 
 | Date | What changed |
 |---|---|
+| 2026-10-23 | Soft furnishings: tests runnable from the repo; release v13 built (notes stand out, call and directions icons, admin New measure / New fit fix), PR #1, awaiting Greg's OK to deploy. |
 | 2026-10-23 | Brand settled: the brand PDFs and the shared design file win over the old app colours and fonts. |
 | 2026-10-23 | Survey apps pushed to GitHub. Cloud deploy access checked. Design file and survey to FileMaker design drafted. This note created, then merged with Greg's handover from the previous chat. |
