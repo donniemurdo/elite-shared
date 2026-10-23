@@ -103,7 +103,7 @@ Built by Greg with Claude Code and agentic-fm on his Mac (`/Users/gwins/Developm
 * Cloud environment set up with a scoped Cloudflare token (expires 2027-10-23); read access to the Worker, secrets, R2 and the zone verified. Write access not proven until the first real deploy.
 * Shared design file drafted from the brand PDFs.
 * Survey to FileMaker data flow design agreed in principle: [docs/survey-to-filemaker.md](docs/survey-to-filemaker.md). Key: every measure comes from a FileMaker quote and is keyed by its Q- number (S- once ordered, same serial); FileMaker pushes quote and client data to the Worker so a Q- number fills in the client; FileMaker pulls finished surveys every 15 minutes via a server schedule under Greg's Claris ID (re-save yearly). No extra Claris licence needed. Jobs are created explicitly by the office (FileMaker checkbox or admin page, Measure or Fit only, one job per Q- number). Nothing built.
-* Survey review and quoting recommendation: [docs/survey-review-and-quoting.md](docs/survey-review-and-quoting.md). Office reviews each item and clears warnings on a new admin review screen; only Checked surveys go to FileMaker; supplier, product and fabric are picked and priced in FileMaker on a new allocation card off the quote (not on the web page, because FileMaker owns the catalogue, codes and costing). Nothing built; decisions open in section 11.
+* Survey review and quoting recommendation: [docs/survey-review-and-quoting.md](docs/survey-review-and-quoting.md). Office reviews each item and clears warnings on a new admin review screen; only Checked surveys go to FileMaker; supplier, product and fabric are picked and priced in FileMaker on a new allocation card off the quote (not on the web page, because FileMaker owns the catalogue, codes and costing). Greg's answers recorded 2026-10-23 (Curtainwise costs fabric metres and making; that send lives in FileMaker). Nothing built; remaining decisions in section 11.
 * This shared repo and note created.
 * Tests fixed: `npm install`, then `./build.sh && npm test` runs all 7 files from the repo (Playwright for app and admin, Node for the Worker).
 * Release v13 (soft furnishings PR #1, live 2026-10-23, version 547e2eaa): office notes (access and parking, notes for the measurer or fitter) shown in full in a Kiwi "Read before you start" box at the top of the job screen, plus a "Notes, read first" chip on job list cards; phone and pin icons on Call and Directions; admin New measure shows only measure fields and New fit only fit fields (Edit and Duplicate show all).
@@ -119,7 +119,7 @@ Built by Greg with Claude Code and agentic-fm on his Mac (`/Users/gwins/Developm
    * Warn if the chain would be under about 500 mm, or if hanging height is missing (Check screen and when marking measured).
    * Required safety device per chain operated blind: tensioner fixed to wall, breakaway, or chain break.
    * All of it in the Excel export.
-5. Survey review (once Greg answers the open decisions): phone app critical choices start blank (blind fit, drop reference, heading, lining are pre-filled today, so the office cannot tell chosen from untouched), shared warning rules file, survey locks after Measured; then the admin review screen with edits, warning clearance and Mark as checked. Steps A and B in [docs/survey-review-and-quoting.md](docs/survey-review-and-quoting.md) section 7. No FileMaker change.
+5. Survey review: phone app critical choices start blank (agreed 2026-10-23; blind fit, drop reference, heading, lining are pre-filled today, so the office cannot tell chosen from untouched), shared warning rules file, survey locks after Measured; then the admin review screen with edits, warning clearance and Mark as checked. Steps A and B in [docs/survey-review-and-quoting.md](docs/survey-review-and-quoting.md) section 7. No FileMaker change.
 6. Later: FileMaker format Excel export (Greg supplies the format), cloud backup for the bed survey, Curtainwise column template, brand fonts and logo, possibly an import of jobs from FileMaker (check the DDR first). Survey to FileMaker stage 0 (UUID survey ids, revision counter) fits here, see section 10.
 
 ## 8. Rules
@@ -171,13 +171,12 @@ Built by Greg with Claude Code and agentic-fm on his Mac (`/Users/gwins/Developm
 5. Is a schedule tied to Greg's Claris ID, re-saved yearly, acceptable for now?
 6. Pull frequency: every 15 minutes in working hours, or less?
 
-**Survey review and quoting** (details in [docs/survey-review-and-quoting.md](docs/survey-review-and-quoting.md) section 8)
+**Survey review and quoting** (details in [docs/survey-review-and-quoting.md](docs/survey-review-and-quoting.md) section 8). Agreed 2026-10-23: warnings reviewed and cleared on the web admin page only, Missing and Check kinds, each warning cleared on its own; quote lines grouped by identical spec; critical choices start blank on the phone; fabric metres and making cost come from Curtainwise; the send to Curtainwise for costing lives in FileMaker (fabric per curtain with roll width and pattern repeat). Still open:
 1. Send to FileMaker on Checked (office reviewed), not Measured? Recommended: yes. Changes survey design decision 1.
-2. Quote lines: one per surveyed item, or one per identical spec with a quantity and room numbers? Recommended: grouped by spec.
-3. Fabric metres: FileMaker calculation shown as an editable suggestion, or the maker's figure? Recommended: calculation; needs Greg's allowances per heading.
-4. Making and blinds pricing: supplier quotes each job (cost typed per line) or price lists by width and drop (needs a price grid, new scope)? Decides most of the FileMaker build.
-5. Critical choices start blank on the phone? Recommended: yes, at least fit and drop reference, with "same as last item".
-6. Office may edit measurements on the review screen with a full log, measurer copy locked after Measured? Recommended: yes.
+2. Office may edit measurements on the review screen with a full log, measurer copy locked after Measured? Recommended: yes.
+3. Blinds: supplier quotes each job, or price list by width and drop (needs a price grid, new scope)?
+4. Curtainwise: what they send back (fixed layout file to import, or typed) and the column layout they want.
+5. Bulk clear shortcut for the same warning on identical items? Recommended: yes.
 
 **Design** (details in [design/elite-design.md](design/elite-design.md) section 8)
 1. Buttons: darker olive #686D1E (passes contrast) or brand olive with larger bold labels?
@@ -190,6 +189,7 @@ Built by Greg with Claude Code and agentic-fm on his Mac (`/Users/gwins/Developm
 
 | Date | What changed |
 |---|---|
+| 2026-10-23 | Survey review and quoting: Greg's answers recorded (web review only, each warning cleared on its own, grouped quote lines, blank defaults, Curtainwise returns metres and making cost, send to Curtainwise from FileMaker). |
 | 2026-10-23 | Survey review and quoting recommendation written (docs/survey-review-and-quoting.md): review and warnings on the web admin page, supplier, fabric and pricing in FileMaker. Open decisions added to section 11. Nothing built. |
 | 2026-10-23 | R2 bucket `elite-surveys` moved to the EU jurisdiction (location hint ignored for a reused name). Test data deleted. Worker redeployed with `jurisdiction: eu` binding. |
 | 2026-10-23 | Soft furnishings: tests runnable from the repo; release v13 (notes stand out, call and directions icons, admin New measure / New fit fix) merged and live. A deploy during the bucket move briefly created a stray North America bucket; removed and redeployed with the EU binding.  |
