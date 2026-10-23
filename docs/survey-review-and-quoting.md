@@ -43,7 +43,7 @@ Two kinds:
 | **Missing** (critical field blank) | Curtain drop, blind width, inside or outside recess not chosen | No. Enter the value, or set it to TBC with a note (same idea as the TBC colour rule in FileMaker). TBC items go to FileMaker marked TBC. |
 | **Check** (value looks wrong) | Drop of 240 (cm not mm), widths differ by 15 mm, rail narrower than window | Yes. "Checked, correct" records who and when. |
 
-Each warning has its own **Checked, correct** button (Greg, 2026-10-23). Clearing one never clears another. For contract jobs, offer one shortcut: where the same Check warning, with the same values, appears on several identical items (for example 30 windows all 15 mm out of square), "Clear this on all N" ticks each one individually, so each still has its own record.
+Each warning has its own **Checked, correct** button (Greg, 2026-10-23). Clearing one never clears another. No bulk clear, not even for identical looking warnings on identical items, in case they are not identical (Greg, 2026-10-23).
 
 Clearing rule: a clearance is stored against the item, the warning code and the values it was raised on. If any of those values change later, the warning comes back. No silent carry over.
 
@@ -134,15 +134,36 @@ Codes: the web side never needs supplier or product codes. They stay in FileMake
 
 * Only checked surveys go to FileMaker, and the admin team sends them: a **Send to FileMaker** button on the review screen, available once nothing is open. Not automatic on Measured or on Checked. FileMaker picks it up on its next 15 minute pull.
 * Grouping happens in FileMaker, at Create quote lines, after fabrics are allocated. Items only group when type, product, fabric and order size all match, so it cannot be decided on the web side.
-* Blinds are priced through the blind supplier Excel (the company, not the spreadsheet). The admin team gets the prices and types the costs into FileMaker per line. No price grid needed.
+* Roller blinds are made by Excel ([excelgb.com](https://www.excelgb.com), ordering portal [excel.blindata.co.uk](https://excel.blindata.co.uk)), the blind maker, not the spreadsheet. The admin team prices them there and types the costs into FileMaker per line. No price grid needed. Roman blinds are made by Curtainwise and go in the Curtainwise send like curtains.
+* No bulk clear of warnings: each is checked on its own.
 * The office can edit measurements on the review screen. Every change is tracked: field, old value, new value, who, when, plus every warning clearance. The measurer's copy locks after Measured.
 
 **Still open**
-1. **Curtainwise return.** Do they send back a file in a fixed layout (FileMaker can import it) or a PDF or email (office types the figures)? And the column layout they want to receive.
-2. **Bulk clear shortcut** for identical warnings on identical items (section 3). Recommended: yes.
-3. **Send to Excel (blinds) from FileMaker too?** Same idea as Curtainwise: one row per blind with order size, fit, control side and type, fabric. Recommended: yes, if Excel accepts a file; otherwise the admin team keeps doing it by hand.
+1. **Ask Curtainwise for a CSV or Excel export** of their quotation and fabric summary (section 8a). If they can, FileMaker imports it; if not, the office types the figures for the first version.
+2. **Curtainwise input format.** What they want to receive from us (the file their office keys from), and whether they work in cm (their quotes show cm; the survey is in mm).
+3. **Send to Excel (rollers) from FileMaker too?** One row per blind with order size, fit, control side and type, fabric, as a print or file to key into the Blindata portal. Recommended: yes, as a printable list; the portal is keyed by hand either way unless Excel offers an upload.
+
+## 8a. What Curtainwise sends back (from example PDFs, Q17532 and Q17420)
+
+Two PDFs per job, both carrying **Cust Ref = our Q- number**:
+
+**Quotation** (one line per curtain or roman, grouped by room):
+* `Line #`, `Location` (for example "Solway W1", "Living Doors"), type (Curtain, Roman), width and drop in **cm**, measure basis (Rail Size, Recess), quantity.
+* Fabric (always "Cust Fab", supplied by Elite), number of widths, **fabric amount in metres** (with "Railroad" when turned).
+* Single or pair and side, heading (for example Wave Lined), lining (Curtainwise's own, for example "Cw09 Black Out Ivory FR"), labels, lead weights, extras; romans add control, control unit, rail, stack, child safety, stitch, install height and special instructions.
+* List price, discount (10%), **net price per line** (making, with lining). Room subtotals and job totals with VAT.
+
+**Fabric summary** (one block per fabric):
+* Fabric name, **roll width (mm)** and **pattern repeat (mm)**, then metres per location and type (Main Fabric or Lining), and **Total Quantity Used** per fabric. Lining is listed too, but it is Curtainwise's and inside their price.
+
+What this means for FileMaker:
+* Match lines back by Q- number plus Location. So the send to Curtainwise must give every item a Location that is unique on the job, built from room and window (for example "101 W1"), and Curtainwise must keep it. Then returned figures land on the right survey item without guessing.
+* Per item, FileMaker stores the making cost (net) and the fabric metres. Main fabric metres go on the `Main Fabric` option row (`Quantity`), so cost = metres x per metre cost as now. The making cost is the line's maker cost; Curtainwise is the supplier for that part.
+* The fabric totals per fabric are what Elite orders from the fabric supplier: exactly the Phase 2 PO quantity per fabric supplier. FileMaker can total them from the option rows, so the summary PDF becomes a check, not a source.
+* The PDF text extracts cleanly (tested), so reading the PDFs automatically is possible, but a layout change on their side would break it silently. Prefer a CSV or Excel export from Curtainwise; typed entry with the PDF beside it is the safe first version.
 
 ## 9. Not checked
 
 * The current FileMaker product structure for curtain making and blinds (how they are set up as `Products`, unit of measure, whether a curtain is one product with a fabric option). Need a short extract or Greg's description before scoping step D.
 * `FabricDesignRanges` field list: roll width and pattern repeat are needed for the Curtainwise file and are not listed in Standards.
+* The Excel (Blindata) portal: not looked at, whether it takes an upload.
