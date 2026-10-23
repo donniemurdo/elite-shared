@@ -134,7 +134,7 @@ Codes: the web side never needs supplier or product codes. They stay in FileMake
 * Critical choices (blind fit, drop reference, heading, lining) start blank on the phone and count as Missing until chosen.
 * Fabric metres come from Curtainwise, not a FileMaker calculation: Curtainwise adds heading and workroom allowances and returns metres and making cost, which go into FileMaker.
 * The send to Curtainwise for costing lives in FileMaker, because it needs the fabric allocated to each curtain, with roll width and pattern repeat.
-* **Until then, the app's Supplier data (Excel) is the Curtainwise file** (Greg, 2026-10-23): everything they need, no client details or notes, a Location per item. Built in soft furnishings v16 (PR #6, not deployed).
+* **Until then, the app's Supplier data (Excel) is the Curtainwise file** (Greg, 2026-10-23): everything they need, no client details or notes, a Location per item. Live in soft furnishings v16 (PR #6, 2026-10-23).
 
 * Only checked surveys go to FileMaker, and the admin team sends them: a **Send to FileMaker** button on the review screen, available once nothing is open. Not automatic on Measured or on Checked. FileMaker picks it up on its next 15 minute pull.
 * Grouping happens in FileMaker, at Create quote lines, after fabrics are allocated. Items only group when type, product, fabric and order size all match, so it cannot be decided on the web side.
