@@ -1,0 +1,115 @@
+/* Elite shared design tokens.
+   Source: Elite CF, Elite Beds and Elite FF&E brand guidelines (Oct 2026).
+   See elite-design.md for the rules behind each value.
+   Default brand is Elite CF. Add data-brand="beds" or data-brand="ffe" on <html> to switch. */
+
+:root {
+  /* Brand palette: Elite CF */
+  --brand-primary: #0A1F4A;       /* Navy: headings, header bands, backdrops */
+  --brand-action: #777D23;        /* Olive: buttons */
+  --brand-action-text: #686D1E;   /* Olive darkened for white text at 16px (5.5:1). Pending Greg's OK, see design doc */
+  --brand-highlight: #C3CB4D;     /* Kiwi: highlights only, never text on light backgrounds */
+  --brand-light: #FCFCFC;         /* White */
+  --brand-neutral: #3A3A3A;       /* Charcoal: body text */
+  --on-primary: #FCFCFC;
+  --on-action: #FCFCFC;
+  --on-highlight: #0A1F4A;
+
+  /* Derived neutrals: tints of the brand palette, not new colours */
+  --bg: var(--brand-light);
+  --surface: #FFFFFF;
+  --surface-tint: color-mix(in srgb, var(--brand-primary) 5%, #FFFFFF);
+  --line: color-mix(in srgb, var(--brand-primary) 18%, #FFFFFF);
+  --muted: color-mix(in srgb, var(--brand-neutral) 75%, #FFFFFF);
+  --highlight-bg: color-mix(in srgb, var(--brand-highlight) 15%, #FFFFFF);
+
+  /* Functional colours: not in the guidelines, kept from the current apps for status and accessibility */
+  --ok: #17703F;    --ok-bg: #DDF2E5;
+  --warn: #7D5200;  --warn-bg: #FCEFC4;
+  --bad: #9F2525;   --bad-bg: #FADEDE;
+  --focus: #1D5FD1;
+
+  /* Typography: Poppins headings, Lato body */
+  --font-heading: 'Poppins', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-body: 'Lato', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --weight-heading: 600;
+  --size-body: 16px;
+  --size-h-small: 21px;
+  --size-h-medium: 28px;
+  --size-h-large: 37px;
+  --size-hero: 49px;
+
+  /* Shape and touch */
+  --radius: 8px;
+  --radius-card: 12px;
+  --border: 1.5px;
+  --touch: 48px;
+}
+
+:root[data-brand="beds"] {
+  --brand-primary: #8B9D83;       /* Sage: logo backdrop, bands */
+  --brand-action: #51564D;        /* Dark Olive: buttons (white on Sage is only 2.9:1) */
+  --brand-action-text: #51564D;
+  --brand-highlight: #DED1BE;     /* Sand */
+  --brand-light: #F2F2E7;         /* Ivory */
+  --brand-neutral: #3A3A3A;
+  --on-primary: #FFFFFF;          /* large text and logo only on Sage */
+  --on-action: #F2F2E7;
+  --on-highlight: #3A3A3A;
+}
+
+:root[data-brand="ffe"] {
+  --brand-primary: #994636;       /* Chestnut Rust */
+  --brand-action: #994636;
+  --brand-action-text: #994636;
+  --brand-highlight: #2C3E50;     /* Wet Asphalt */
+  --brand-light: #F2F2F2;         /* Platinum */
+  --brand-neutral: #3A3A3A;
+  --on-primary: #FFFFFF;
+  --on-action: #FFFFFF;
+  --on-highlight: #FFFFFF;
+  --line: #E7E7E7;                /* Concrete */
+}
+
+/* Base elements */
+body { margin: 0; background: var(--bg); color: var(--brand-neutral); font: 400 var(--size-body)/1.45 var(--font-body); }
+h1, h2, h3 { font-family: var(--font-heading); font-weight: var(--weight-heading); color: var(--brand-primary); margin: 0; line-height: 1.15; }
+h1 { font-size: var(--size-h-medium); }   /* phones: Medium for page titles */
+h2 { font-size: var(--size-h-small); }
+h3 { font-size: 18px; }
+@media (min-width: 900px) {               /* office browsers */
+  h1 { font-size: var(--size-h-large); }
+  h2 { font-size: var(--size-h-medium); }
+  h3 { font-size: var(--size-h-small); }
+}
+
+/* Header band: logo white on primary */
+.brand-band { background: var(--brand-primary); color: var(--on-primary); border-bottom: 5px solid var(--brand-highlight); }
+.brand-band h1 { color: var(--on-primary); }
+
+/* Buttons */
+.btn {
+  min-height: var(--touch); padding: 10px 16px; border-radius: var(--radius); cursor: pointer;
+  font: 600 16px/1.2 var(--font-heading);
+  border: var(--border) solid var(--line); background: var(--surface); color: var(--brand-primary);
+}
+.btn.primary { background: var(--brand-action-text); border-color: var(--brand-action-text); color: var(--on-action); }
+.btn.secondary { background: var(--surface); border-color: var(--brand-primary); color: var(--brand-primary); }
+.btn.danger { background: var(--surface); border-color: var(--bad); color: var(--bad); }
+.btn.small { min-height: 40px; padding: 6px 12px; font-size: 14px; }
+.btn[disabled] { opacity: .55; cursor: default; }
+
+/* Forms */
+label { font: 600 13px/1.3 var(--font-heading); color: var(--muted); letter-spacing: .03em; }
+input, select, textarea {
+  width: 100%; min-height: var(--touch); padding: 10px 12px; box-sizing: border-box;
+  font: 400 16px var(--font-body); color: var(--brand-neutral);   /* 16px stops iOS zooming */
+  background: var(--surface); border: var(--border) solid var(--line); border-radius: var(--radius);
+}
+input:focus-visible, select:focus-visible, textarea:focus-visible, button:focus-visible { outline: 3px solid var(--focus); outline-offset: 1px; }
+
+/* Cards, chips, highlights */
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-card); padding: 14px; }
+.chip { font: 600 13px var(--font-heading); padding: 4px 10px; border-radius: 99px; background: var(--surface-tint); color: var(--brand-primary); }
+.chip.highlight { background: var(--brand-highlight); color: var(--on-highlight); }
+.highlight-box { border: 2px solid var(--brand-highlight); border-left-width: 8px; background: var(--highlight-bg); border-radius: var(--radius-card); padding: 12px; }
