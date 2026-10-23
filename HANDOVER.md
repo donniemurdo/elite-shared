@@ -114,7 +114,7 @@ Built by Greg with Claude Code and agentic-fm on his Mac (`/Users/gwins/Developm
 ## 7. To do next (in this order unless Greg says otherwise)
 
 1. Check release v13 on a phone (live 2026-10-23).
-2. People list and own jobs only (PR #3): Greg merges PR #2 then PR #3 and OKs the deploy (release v14: bump `APP_VERSION` and the `sw.js` cache name). After deploy Greg opens `/admin/people.html` and adds David MacFarlane (measurer) and any fitters and reps. Until someone is in the list, the office uses "Someone else..." on the job form. Warn measurers first: after v14 they see only their own jobs.
+2. People list and own jobs only (PR #3): Greg merges PR #2 then PR #3 and ships it in the combined release with the other UI changes (Greg, 2026-10-23: app not live until testing starts Monday, so one release, no separate v14). After deploy Greg opens `/admin/people.html` and adds David MacFarlane (measurer) and any fitters and reps. Until someone is in the list, the office uses "Someone else..." on the job form. Warn measurers first: after v14 they see only their own jobs.
 3. Scot Rigby (external measurer and fitter, emailed PIN, deferred until near his first job): Greg adds him on the People page, then sets up Access as in section 9 item 2. The Worker side is already in PR #3.
 4. Blind child safety:
    * Hanging height per blind (floor to top of blind).
