@@ -15,6 +15,8 @@ So: not supplier and fabric on the web page. Picking them on the web means copyi
 
 What Greg asked for ("next to each window pick a supplier and fabric") is delivered, but inside FileMaker, on one allocation screen that lists every window and item from the survey.
 
+**Works without FileMaker (Greg, 2026-10-23):** the review screen, warnings, office edits and tracking do not depend on FileMaker and are built first. Until the new FileMaker link is switched on ([survey-to-filemaker.md](survey-to-filemaker.md), "Works without FileMaker"), the last step is **Mark as checked** and the office uses the existing Excel exports and keys suppliers by hand, as now. When the link is on, the same button becomes **Send to FileMaker**.
+
 ## 2. Recommended flow
 
 ```

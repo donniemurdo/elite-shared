@@ -78,8 +78,15 @@ Rules:
 - One job per Q- number. The job id is the Q- number, so the survey id is too. Creating a second job for the same Q- number from either side opens the existing one instead of making a duplicate.
 - A job holds both visits, as it does now: the measure (date, measurer) and the fit (date, fitter). "Fit only" is the existing `fitOnly` flag; the measure part is skipped.
 - When the quote is ordered, FileMaker sends the S- number; the job shows it and is ready to book the fit.
-- A Q- number not found in the copy (for example FileMaker has not sent it yet): the admin page says so and offers to retry; it does not let the office type client details by hand.
+- A Q- number not found in the copy (for example FileMaker has not sent it yet): once the link is live, the admin page says so and offers to retry rather than taking typed client details. Until then, see "Works without FileMaker" below.
 - Customer details are edited in FileMaker only; the admin page shows them read only. The phone keeps the jobs list for offline use, as now.
+
+### Works without FileMaker (Greg, 2026-10-23)
+
+The new EliteFM is not built yet and the current FileMaker has none of this. The app and admin page must keep working with no FileMaker link at all, so David can carry out measures and fits as now:
+- The link is an add-on, switched on by one setting in the Worker (`FM_LINK`, off by default) once the new FileMaker sends quotes and pulls surveys.
+- Link off (now): the office creates jobs on the admin page and types the client details by hand, as today. The Q- number is an optional typed field; job ids stay as they are. Surveys, review, warnings, exports and the Excel job sheet all work unchanged.
+- Link on: Q- lookup fills client details, typed client details are locked, the feed and acks run. Jobs created by hand before the switch keep their typed details; the office can link one to a Q- number later.
 
 ## 6. FileMaker side (when it is built)
 

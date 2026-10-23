@@ -185,6 +185,7 @@ Also agreed: everything in cm (one decimal allowed), and Curtainwise CSV or Exce
 
 | Date | What changed |
 |---|---|
+| 2026-10-23 | Survey designs: FileMaker link is an add-on behind one Worker setting; until the new EliteFM is built the app and admin work as now with hand typed jobs and client details (Greg). |
 | 2026-10-23 | Excel blind portal read: hand keyed, no upload; fields recorded in docs/survey-review-and-quoting.md section 8b. |
 | 2026-10-23 | Soft furnishings v14 live (PR #4, includes PR #3): UI redesign with menu and separate sign out, brand applied, blank critical choices, fabric allocation left to FileMaker, all sizes in cm (mm surveys converted on load). Olive #686D1E buttons approved by Greg. |
 | 2026-10-23 | Access: staff login confirmed Microsoft only with Instant Auth (infra item 2 staff part done). Token given Access Apps and Policies Edit; Claude changes Access only when Greg asks. |
