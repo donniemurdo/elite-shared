@@ -59,11 +59,13 @@ Built by Greg with Claude Code and agentic-fm on his Mac (`/Users/gwins/Developm
 * Surveys: `curtains/<email slug>/<id>.json` plus `.prev.json` copies.
 * `bymeasure/<id>.json` pointers so a fitter loads the latest survey for a job whoever saved it.
 * Jobs: one object, `measures/all.json`, written with an etag check and retry; previous copy in `all.prev.json`. Fine for hundreds of jobs; move to D1 if it grows.
+* People list (from PR #3): `people/all.json`, previous copy in `people/all.prev.json`.
 
 **Login**
 * Cloudflare Access with Microsoft Entra (M365). The Worker also verifies the Access token itself and fails closed.
-* `wrangler.jsonc`: `TEAM_DOMAIN`, `POLICY_AUD`, `ALLOWED_DOMAIN` (elitecontractfurniture.co.uk), `ADMINS` (greg), `OFFICE` (amen, betsy, greg).
-* Office users add and edit jobs. Everyone signed in sees the job list and updates their own status. Staff already signed in to M365 get in without a prompt (expected).
+* `wrangler.jsonc`: `TEAM_DOMAIN`, `POLICY_AUD` (one or more Access app audience tags, comma separated), `ALLOWED_DOMAIN` (elitecontractfurniture.co.uk), `ADMINS` (greg), `OFFICE` (amen, betsy, greg).
+* Live (v13): office users add and edit jobs; everyone signed in sees the whole job list and updates status. Staff already signed in to M365 get in without a prompt (expected).
+* From PR #3 (not deployed yet): `ADMINS` and `OFFICE` see every job and use `/admin/`. Everyone else sees only jobs where they are measurer or fitter (no change history), can only change status on those, can only open the survey for those, and is sent away from `/admin/`. Only `ADMINS` edits the people list at `/admin/people.html`; office reads it for the job form dropdowns. Someone outside the company domain gets in only while Active in the people list (and only if Access lets them in); they cannot open `/beds/` or bed backups.
 
 **Jobs**
 * One job can have a measure visit and a fit visit. Fit only jobs (`fitOnly = '1'`) have no measure visit; the client supplied sizes.
@@ -105,13 +107,14 @@ Built by Greg with Claude Code and agentic-fm on his Mac (`/Users/gwins/Developm
 * Survey to FileMaker data flow design agreed in principle: [docs/survey-to-filemaker.md](docs/survey-to-filemaker.md). Key: every measure comes from a FileMaker quote and is keyed by its Q- number (S- once ordered, same serial); FileMaker pushes quote and client data to the Worker so a Q- number fills in the client; FileMaker pulls finished surveys every 15 minutes via a server schedule under Greg's Claris ID (re-save yearly). No extra Claris licence needed. Jobs are created explicitly by the office (FileMaker checkbox or admin page, Measure or Fit only, one job per Q- number). Nothing built.
 * This shared repo and note created.
 * Tests fixed: `npm install`, then `./build.sh && npm test` runs all 7 files from the repo (Playwright for app and admin, Node for the Worker).
+* People list, own jobs only and external user support (soft furnishings [PR #3](https://github.com/donniemurdo/elite-softfurnishing-survey/pull/3), built on PR #2, all 9 test files pass, **not deployed**, needs Greg's OK). Measurer and fitter fields are dropdowns from the list, sales reps appear as measurers, "Someone else..." for a one off.
 * Release v13 (soft furnishings PR #1, live 2026-10-23, version 547e2eaa): office notes (access and parking, notes for the measurer or fitter) shown in full in a Kiwi "Read before you start" box at the top of the job screen, plus a "Notes, read first" chip on job list cards; phone and pin icons on Call and Directions; admin New measure shows only measure fields and New fit only fit fields (Edit and Duplicate show all).
 
 ## 7. To do next (in this order unless Greg says otherwise)
 
 1. Check release v13 on a phone (live 2026-10-23).
-2. People list in admin: measurers, fitters and sales reps (reps sometimes measure), each with name, email and role. Measurer and fitter fields become dropdowns with a way to enter someone else. Greg alone edits the list and other settings as administrator; the office team adds and edits jobs (Greg, 2026-10-23).
-3. External fitter: one outside fitter sees only jobs assigned to him; no full job list, no admin page, no other people's backups. Needs the Worker to allow named external emails and the Access policy changed (Greg makes the Access change; give him the steps). Greg's answers (2026-10-23): measurers see only their own jobs. Measurers are Scot Rigby (external) and David MacFarlane (Elite). Scot is also the one outside fitter. He has no Elite M365 account and signs in with the Cloudflare Access emailed PIN; only Scot may use the PIN. Adding him is deferred until near his first measure or fit.
+2. People list and own jobs only (PR #3): Greg merges PR #2 then PR #3 and OKs the deploy (release v14: bump `APP_VERSION` and the `sw.js` cache name). After deploy Greg opens `/admin/people.html` and adds David MacFarlane (measurer) and any fitters and reps. Until someone is in the list, the office uses "Someone else..." on the job form. Warn measurers first: after v14 they see only their own jobs.
+3. Scot Rigby (external measurer and fitter, emailed PIN, deferred until near his first job): Greg adds him on the People page, then sets up Access as in section 9 item 2. The Worker side is already in PR #3.
 4. Blind child safety:
    * Hanging height per blind (floor to top of blind).
    * Chain length to order = hanging height minus 1500 mm, rounded down to 10 mm. Chains are made to measure, so any length is allowed.
@@ -137,12 +140,12 @@ Built by Greg with Claude Code and agentic-fm on his Mac (`/Users/gwins/Developm
 | # | Action | Who | Status |
 |---|---|---|---|
 | 1 | Move R2 bucket `elite-surveys` out of North America. The `--location weur` hint is ignored when a bucket name is reused, so the bucket was recreated in the EU jurisdiction (Greg's choice), same name. Cloudflare places it in EEUR; data is guaranteed to stay in the EU. 11 test objects deleted, old bucket deleted, Worker redeployed with the EU binding, write and read checked. | Claude | **Done 2026-10-23.** Greg to confirm one real cloud backup save from the app shows as saved. Greg to merge elite-softfurnishing-survey PR #2 (adds the EU binding). Live is v13 with the EU binding (version 547e2eaa) |
-| 2 | Cloudflare Access on the measure app: Microsoft for staff, emailed PIN for Scot only. Until Scot is added: untick One time PIN so only Microsoft shows, and Instant authentication can be on. When Scot is added: re-tick One time PIN, add a policy that allows only Scot's email with login method One time PIN, require the Microsoft login method on the staff policy, and turn Instant authentication off (it only works with one login method). | Greg (steps from Claude) | Open |
+| 2 | Cloudflare Access: Microsoft for staff, emailed PIN for Scot only. **Now:** on the measure app's Login methods, turn off "Accept all available identity providers", tick only Microsoft Entra ID, untick One time PIN, turn on Instant Auth, save, check in a private window (steps sent 2026-10-23). **When Scot is added, two options (Greg to choose; recommended A):** A) separate address `fit.elitecontractfurniture.co.uk` on the same Worker with its own Access app, One time PIN only, policy allows only Scot's email; Greg sends Claude its audience tag, Claude adds the route and the tag to `POLICY_AUD`. Staff app untouched. B) same address: re-tick One time PIN, add a policy allowing only Scot's email with login method One time PIN, require Microsoft on the staff policy, turn Instant Auth off; staff then see a two button login screen. | Greg (steps from Claude) | Open: Microsoft only step not yet confirmed; A or B not chosen |
 | 3 | Teams: `TEAMS_WEBHOOK_URL` is already set as a Worker secret (seen by the 2026-10-23 deploy check). Still to do: live test with a real booking; a card should appear in Measure & Fit with the measurer mentioned. | Greg tests | Open, live test unconfirmed |
 | 4 | Measurers move to the new address (save a draft file first, then re add the Home Screen icon). Bed app is at `/beds/`. Retire the old morning-queen-dc99 workers.dev address. | Greg and measurers | Open |
 | 5 | Push both repos to GitHub (private). | Claude | **Done 2026-10-23** |
 | 6 | Optional: Google Places key for address lookup (`npx wrangler secret put GOOGLE_MAPS_KEY`). | Greg | Open, optional |
-| 7 | Measurers see only their own jobs (Greg, 2026-10-23; to build with to do item 3). Still unanswered: import jobs from FileMaker? | Greg | Open |
+| 7 | Measurers see only their own jobs (Greg, 2026-10-23): built in PR #3, live after the v14 deploy. Still unanswered: import jobs from FileMaker? | Greg | Open |
 
 ## 10. Known issues and gotchas
 
@@ -179,6 +182,7 @@ Built by Greg with Claude Code and agentic-fm on his Mac (`/Users/gwins/Developm
 
 | Date | What changed |
 |---|---|
+| 2026-10-23 | Soft furnishings PR #3: people list (Greg edits), measurers and fitters see only their own jobs, external email PIN users allowed only while in the list, admin dropdowns. Not deployed. Access item 2 split into "Microsoft only now" and the Scot options. |
 | 2026-10-23 | R2 bucket `elite-surveys` moved to the EU jurisdiction (location hint ignored for a reused name). Test data deleted. Worker redeployed with `jurisdiction: eu` binding. |
 | 2026-10-23 | Soft furnishings: tests runnable from the repo; release v13 (notes stand out, call and directions icons, admin New measure / New fit fix) merged and live. A deploy during the bucket move briefly created a stray North America bucket; removed and redeployed with the EU binding.  |
 | 2026-10-23 | Brand settled: the brand PDFs and the shared design file win over the old app colours and fonts. |
