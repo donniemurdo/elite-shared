@@ -123,6 +123,7 @@ Built by Greg with Claude Code and agentic-fm on his Mac (`/Users/gwins/Developm
    * Warn if the chain would be under about 50 cm, or if hanging height is missing (Check screen and when marking measured).
    * Required safety device per chain operated blind: tensioner fixed to wall, breakaway, or chain break.
    * All of it in the Excel export.
+   * Excel (the blind maker) already takes Install Height and calculates Control Length: hanging height feeds Install Height, and our chain length becomes a check against theirs.
 5. Survey review: critical choices start blank (done in v14); next a shared warning rules file, survey locks after Measured; then the admin review screen with edits, warning clearance and Mark as checked. Steps A and B in [docs/survey-review-and-quoting.md](docs/survey-review-and-quoting.md) section 7. No FileMaker change.
 6. Later: FileMaker format Excel export (Greg supplies the format), cloud backup for the bed survey, Curtainwise column template, possibly an import of jobs from FileMaker (check the DDR first). Survey to FileMaker stage 0 (UUID survey ids, revision counter) fits here, see section 10.
 
@@ -174,7 +175,7 @@ Built by Greg with Claude Code and agentic-fm on his Mac (`/Users/gwins/Developm
 **Survey review and quoting** (details in [docs/survey-review-and-quoting.md](docs/survey-review-and-quoting.md) section 8). Agreed 2026-10-23: warnings reviewed and cleared on the web admin page only, Missing and Check kinds, each cleared on its own; admin team sends checked surveys to FileMaker with a button; grouping of quote lines done in FileMaker after fabric allocation; critical choices start blank on the phone; Curtainwise returns fabric metres and making cost, and the send to Curtainwise lives in FileMaker (fabric per curtain with roll width and pattern repeat); roller blinds made by Excel (excelgb.com, Blindata portal) and priced there by the admin team, costs typed into FileMaker; roman blinds made by Curtainwise; no bulk clear of warnings; office can edit measurements, every change tracked. Still open:
 Also agreed: everything in cm (one decimal allowed), and Curtainwise CSV or Excel exports are imported into FileMaker, matched by Q- number and Location, confirmed by the office.
 1. What input format Curtainwise wants from us; a sample of their CSV or Excel export for the import mapping.
-2. Excel (rollers): portal has no upload, orders keyed by hand, Q- number in Customer Reference, fabric from Excel's own list, net price per blind. Recommended: printable roller list from FileMaker. Size units (Metric, probably mm) to confirm.
+2. Excel (rollers): keyed by hand, sizes in mm, Q- number in Customer Reference, Excel applies its own recess deductions (send recess size as measured, app roller deduction stays 0), Excel calculates control length from install height. Recommended: printable roller list from FileMaker.
 
 **Design** (details in [design/elite-design.md](design/elite-design.md) section 8)
 1. Bed survey brand: Beds (retail) or CF (hotels)?
@@ -186,6 +187,7 @@ Also agreed: everything in cm (one decimal allowed), and Curtainwise CSV or Exce
 
 | Date | What changed |
 |---|---|
+| 2026-10-23 | Excel roller form read: mm, own recess deductions, install height and control length, options priced per blind. |
 | 2026-10-23 | Survey designs: FileMaker link is an add-on behind one Worker setting; until the new EliteFM is built the app and admin work as now with hand typed jobs and client details (Greg). |
 | 2026-10-23 | Excel blind portal read: hand keyed, no upload; fields recorded in docs/survey-review-and-quoting.md section 8b. |
 | 2026-10-23 | Soft furnishings v14 live (PR #4, includes PR #3): UI redesign with menu and separate sign out, brand applied, blank critical choices, fabric allocation left to FileMaker, all sizes in cm (mm surveys converted on load). Olive #686D1E buttons approved by Greg. |
