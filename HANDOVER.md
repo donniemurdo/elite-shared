@@ -105,11 +105,11 @@ Built by Greg with Claude Code and agentic-fm on his Mac (`/Users/gwins/Developm
 * Survey to FileMaker data flow design agreed in principle: [docs/survey-to-filemaker.md](docs/survey-to-filemaker.md). Key: every measure comes from a FileMaker quote and is keyed by its Q- number (S- once ordered, same serial); FileMaker pushes quote and client data to the Worker so a Q- number fills in the client; FileMaker pulls finished surveys every 15 minutes via a server schedule under Greg's Claris ID (re-save yearly). No extra Claris licence needed. Open: how FileMaker marks a quote as soft furnishing. Nothing built.
 * This shared repo and note created.
 * Tests fixed: `npm install`, then `./build.sh && npm test` runs all 7 files from the repo (Playwright for app and admin, Node for the Worker).
-* Release v13 (soft furnishings PR #1, **not yet deployed**): office notes (access and parking, notes for the measurer or fitter) shown in full in a Kiwi "Read before you start" box at the top of the job screen, plus a "Notes, read first" chip on job list cards; phone and pin icons on Call and Directions; admin New measure shows only measure fields and New fit only fit fields (Edit and Duplicate show all).
+* Release v13 (soft furnishings PR #1, live 2026-10-23, version 547e2eaa): office notes (access and parking, notes for the measurer or fitter) shown in full in a Kiwi "Read before you start" box at the top of the job screen, plus a "Notes, read first" chip on job list cards; phone and pin icons on Call and Directions; admin New measure shows only measure fields and New fit only fit fields (Edit and Duplicate show all).
 
 ## 7. To do next (in this order unless Greg says otherwise)
 
-1. Deploy release v13 once Greg OKs it, then check it on a phone.
+1. Check release v13 on a phone (live 2026-10-23).
 2. People list in admin: measurers, fitters and sales reps (reps sometimes measure), each with name, email and role. Measurer and fitter fields become dropdowns with a way to enter someone else. Greg alone edits the list and other settings as administrator; the office team adds and edits jobs (Greg, 2026-10-23).
 3. External fitter: one outside fitter sees only jobs assigned to him; no full job list, no admin page, no other people's backups. Needs the Worker to allow named external emails and the Access policy changed (Greg makes the Access change; give him the steps). Greg's answers (2026-10-23): measurers see only their own jobs. Measurers are Scot Rigby (external) and David MacFarlane (Elite). Scot is also the one outside fitter. He has no Elite M365 account and signs in with the Cloudflare Access emailed PIN; only Scot may use the PIN. Adding him is deferred until near his first measure or fit.
 4. Blind child safety:
@@ -146,6 +146,7 @@ Built by Greg with Claude Code and agentic-fm on his Mac (`/Users/gwins/Developm
 
 ## 10. Known issues and gotchas
 
+* Never deploy from a branch whose `wrangler.jsonc` lacks `"jurisdiction": "eu"` on SURVEYS: wrangler silently creates a new North America bucket instead (happened once on 2026-10-23).
 * Tests: run `./build.sh && npm test` after every change. On a new machine run `npx playwright install chromium` once.
 * `wrangler deploy` silently creates a missing R2 bucket in North America. If the `jurisdiction: eu` line is ever lost from `wrangler.jsonc`, the Worker binds to a new empty bucket and the job list looks empty.
 * R2 location hints only work the first time a bucket name is ever created. To move a bucket again, use a new name or a jurisdiction.
@@ -179,6 +180,6 @@ Built by Greg with Claude Code and agentic-fm on his Mac (`/Users/gwins/Developm
 | Date | What changed |
 |---|---|
 | 2026-10-23 | R2 bucket `elite-surveys` moved to the EU jurisdiction (location hint ignored for a reused name). Test data deleted. Worker redeployed with `jurisdiction: eu` binding. |
-| 2026-10-23 | Soft furnishings: tests runnable from the repo; release v13 built (notes stand out, call and directions icons, admin New measure / New fit fix), PR #1, awaiting Greg's OK to deploy. |
+| 2026-10-23 | Soft furnishings: tests runnable from the repo; release v13 (notes stand out, call and directions icons, admin New measure / New fit fix) merged and live. A deploy during the bucket move briefly created a stray North America bucket; removed and redeployed with the EU binding.  |
 | 2026-10-23 | Brand settled: the brand PDFs and the shared design file win over the old app colours and fonts. |
 | 2026-10-23 | Survey apps pushed to GitHub. Cloud deploy access checked. Design file and survey to FileMaker design drafted. This note created, then merged with Greg's handover from the previous chat. |
