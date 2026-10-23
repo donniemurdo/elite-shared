@@ -47,7 +47,7 @@ Built by Greg with Claude Code and agentic-fm on his Mac (`/Users/gwins/Developm
 **Hosting and deploy**
 * One Cloudflare Worker, `elite-surveys`, serves both apps. `run_worker_first` is on, so the Worker handles every request. workers.dev and preview URLs are off on purpose.
 * The bed app is not deployed from its own repo: copy its files into `public/beds/` of the soft furnishings repo and deploy from there.
-* Release: `./build.sh` (joins `app/` parts into `public/index.html`), bump the cache name in `public/sw.js` and `APP_VERSION` in `app/_p6.js` to the same number (both v14 as of 2026-10-23), run `npm test`, then `npx wrangler deploy`. Phones only update after the cache name changes. There is an in app update banner, and a sign out and update screen that requires a saved draft file first.
+* Release: `./build.sh` (joins `app/` parts into `public/index.html`), bump the cache name in `public/sw.js` and `APP_VERSION` in `app/_p6.js` to the same number (both v15 as of 2026-10-23), run `npm test`, then `npx wrangler deploy`. Phones only update after the cache name changes. There is an in app update banner, and a sign out and update screen that requires a saved draft file first.
 * Deploys can run from the project cloud environment (scoped Cloudflare token). Any deploy needs Greg's go ahead, and anything that might break the live app on site is flagged before shipping.
 
 **Apps**
@@ -111,6 +111,7 @@ Built by Greg with Claude Code and agentic-fm on his Mac (`/Users/gwins/Developm
 * People list, own jobs only and external user support (soft furnishings [PR #3](https://github.com/donniemurdo/elite-softfurnishing-survey/pull/3), live in v14). Measurer and fitter fields are dropdowns from the list, sales reps appear as measurers, "Someone else..." for a one off.
 * Release v13 (soft furnishings PR #1, live 2026-10-23, version 547e2eaa): office notes (access and parking, notes for the measurer or fitter) shown in full in a Kiwi "Read before you start" box at the top of the job screen, plus a "Notes, read first" chip on job list cards; phone and pin icons on Call and Directions; admin New measure shows only measure fields and New fit only fit fields (Edit and Duplicate show all).
 * Release v14 (soft furnishings [PR #4](https://github.com/donniemurdo/elite-softfurnishing-survey/pull/4), live 2026-10-23, version c169667a, includes PR #3): app style redesign per the UI plan (top bar, menu top right with sign out in its own section that saves first, new job home with job card and steps, tap buttons for short choices, brand fonts, colours and logos, admin side navigation); heading, lining, drop reference and blind fit start blank and are flagged; fabric allocation removed from the app (FileMaker does it), a "fabric chosen by the customer" note kept; all sizes in cm with one decimal, mm surveys converted once on load (phone, cloud, draft file), Excel headings in cm.
+* Release v15 ([PR #5](https://github.com/donniemurdo/elite-softfurnishing-survey/pull/5), live 2026-10-23, version ff4b203e): fixed users being stuck after the 24h Access session expired (service worker served the cached page so the login never appeared; pages now network first with offline fallback, `/signin` route and Sign in button). Office only Fabrics and Allocate fabrics screens restored as an interim until the new FileMaker allocates fabric (Greg to confirm on the decision card). The app needs no FileMaker link: Q- ref optional, jobs entered by hand.
 
 ## 7. To do next (in this order unless Greg says otherwise)
 
@@ -160,7 +161,7 @@ Built by Greg with Claude Code and agentic-fm on his Mac (`/Users/gwins/Developm
 * R2 location hints only work the first time a bucket name is ever created. To move a bucket again, use a new name or a jurisdiction.
 * `fitOnly` is handled by its own line in `cleanMeasure` and is not in the `MFIELDS` list.
 * Fit completion photos are job level, not per item.
-* `APP_VERSION` and the service worker cache name are separate; keep them on the same number (v14 and `curtain-survey-v14` from release v14).
+* `APP_VERSION` and the service worker cache name are separate; keep them on the same number (v15 and `curtain-survey-v15` from release v15).
 * Surveys started without a measure get a 4 character random id: not safe as a key in FileMaker. Needs a full UUID (integration stage 0). No revision counter yet.
 * Photos upload inline as base64 in one request (up to 40 MB), which fails on poor signal. Split into one upload per photo.
 * Bed survey has no cloud upload at all.
@@ -187,6 +188,7 @@ Also agreed: everything in cm (one decimal allowed), and Curtainwise CSV or Exce
 
 | Date | What changed |
 |---|---|
+| 2026-10-23 | Soft furnishings v15 live (PR #5): expired sign in fix, office fabric screens back as an interim. |
 | 2026-10-23 | Excel roller form read: mm, own recess deductions, install height and control length, options priced per blind. |
 | 2026-10-23 | Survey designs: FileMaker link is an add-on behind one Worker setting; until the new EliteFM is built the app and admin work as now with hand typed jobs and client details (Greg). |
 | 2026-10-23 | Excel blind portal read: hand keyed, no upload; fields recorded in docs/survey-review-and-quoting.md section 8b. |
