@@ -134,6 +134,7 @@ Codes: the web side never needs supplier or product codes. They stay in FileMake
 * Critical choices (blind fit, drop reference, heading, lining) start blank on the phone and count as Missing until chosen.
 * Fabric metres come from Curtainwise, not a FileMaker calculation: Curtainwise adds heading and workroom allowances and returns metres and making cost, which go into FileMaker.
 * The send to Curtainwise for costing lives in FileMaker, because it needs the fabric allocated to each curtain, with roll width and pattern repeat.
+* **Until then, the app's Supplier data (Excel) is the Curtainwise file** (Greg, 2026-10-23): everything they need, no client details or notes, a Location per item. Built in soft furnishings v16 (PR #6, not deployed).
 
 * Only checked surveys go to FileMaker, and the admin team sends them: a **Send to FileMaker** button on the review screen, available once nothing is open. Not automatic on Measured or on Checked. FileMaker picks it up on its next 15 minute pull.
 * Grouping happens in FileMaker, at Create quote lines, after fabrics are allocated. Items only group when type, product, fabric and order size all match, so it cannot be decided on the web side.
@@ -178,7 +179,7 @@ What this means for FileMaker:
 
 What this means:
 * **Units:** Excel works in mm. Everything on our side is cm; the printable roller list for Excel shows mm (cm x 10), clearly labelled.
-* **Recess or exact:** Excel's Measure To takes the recess size and applies its own deductions. So for Excel rollers send the measured recess size with Measure To = Recess Size, not our order size, otherwise the deduction is taken twice. The app's roller deduction must stay 0 (it is 0 by default today). Outside the recess maps to Excel's exact size option (name to confirm).
+* **Measure To** (Greg, 2026-10-23) has three options: Recess Size, Blind Size, Cloth Size. Inside the recess: send the measured recess size with **Recess Size**, so Excel applies its own deductions (never our order size, or the deduction is taken twice; the app's roller deduction stays 0). Outside the recess: send our order size (opening plus overlaps) with **Blind Size**. Cloth Size is not used from the survey.
 * **Child safety (to do item 4):** Excel already takes Install Height and calculates the Control Length. The survey's hanging height feeds Install Height; our chain length calculation becomes a check against Excel's figure, not a second source.
 * **Fabric:** Excel's own range, so in FileMaker a fabric range (or product) under supplier Excel, picked on the allocation card like any other.
 * **Options:** too many and too supplier specific to model in FileMaker. The survey captures what matters on site (control side and type, bracket, colour, motor or not, child safety device); the admin team picks the rest in the portal, then copies the Net Price per blind back into FileMaker.
@@ -187,4 +188,3 @@ What this means:
 
 * The current FileMaker product structure for curtain making and blinds (how they are set up as `Products`, unit of measure, whether a curtain is one product with a fabric option). Need a short extract or Greg's description before scoping step D.
 * `FabricDesignRanges` field list: roll width and pattern repeat are needed for the Curtainwise file and are not listed in Standards.
-* Excel's name for the outside the recess (exact) Measure To option.
