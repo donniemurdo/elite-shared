@@ -178,6 +178,7 @@ Built by Greg with Claude Code and agentic-fm on his Mac (`/Users/gwins/Developm
 Also agreed: everything in cm (one decimal allowed), and Curtainwise CSV or Excel exports are imported into FileMaker, matched by Q- number and Location, confirmed by the office.
 1. What input format Curtainwise wants from us; a sample of their CSV or Excel export for the import mapping.
 2. Excel (rollers): keyed by hand, sizes in mm, Q- number in Customer Reference. Measure To: Recess Size for inside the recess (Excel deducts, send recess as measured, app roller deduction stays 0), Blind Size for outside (send our order size); Cloth Size unused. Excel calculates control length from install height. Recommended: printable roller list from FileMaker.
+3. `FabricDesignRanges` has no roll width or pattern repeat (Greg, 2026-10-23). To add in EliteFM: `RollWidth` and `PatternRepeat`, Number, cm, on `UI_Fabric_Edit_Card`. On the EliteFM roadmap, not gated.
 
 **Design** (details in [design/elite-design.md](design/elite-design.md) section 8)
 1. Bed survey brand: Beds (retail) or CF (hotels)?
@@ -189,6 +190,7 @@ Also agreed: everything in cm (one decimal allowed), and Curtainwise CSV or Exce
 
 | Date | What changed |
 |---|---|
+| 2026-10-23 | `FabricDesignRanges` confirmed to have no roll width or pattern repeat; two fields specified and added to the EliteFM roadmap. |
 | 2026-10-23 | Soft furnishings v16 (PR #6) live, version c6ebff7d: supplier Excel is the Curtainwise file for now, with no client details or notes and a Location per item. Excel Measure To options recorded. |
 | 2026-10-23 | Soft furnishings v15 live (PR #5): expired sign in fix, office fabric screens back as an interim. |
 | 2026-10-23 | Excel roller form read: mm, own recess deductions, install height and control length, options priced per blind. |

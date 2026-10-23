@@ -99,7 +99,7 @@ All of this is survey integration stage 2 and 3, so **after the Phase 1 gate** a
 * **Create quote lines** script: writes heading rows (`LineType = "Heading"`) and quote lines with `SurveyItemID` kept on the line, plus `Main Fabric` option rows with metres. Then the normal costing workflow. Never changes an existing line silently: a later survey revision flags differences on the line for review (stage 3).
 * **Send to Curtainwise for costing** (new script and export, from the quote). One row per curtain: Q- number, room, window, item, quantity, rail width, finished drop, drop reference, heading, pair or single, lining, extras, and the allocated fabric (supplier, range, colour, roll width, pattern repeat). Column layout to match Curtainwise's template (already on the to do list as "Curtainwise column template").
 * **Curtainwise return:** fabric metres per curtain and making cost go back onto the fabric option row (`Quantity` in metres, so `TotalCost` = metres x per metre cost works as now) and the line's making cost. Typed by the office for the first version; an import only if Curtainwise can send a file in a fixed layout.
-* **Roll width and pattern repeat must come from `FabricDesignRanges`**, not the measurer's notes. Standards does not list these fields on `FabricDesignRanges`; check they exist before scoping, add them if not.
+* **Roll width and pattern repeat must come from `FabricDesignRanges`**, not the measurer's notes. Greg confirmed 2026-10-23 that the table does not have them, so two fields are added: `RollWidth` and `PatternRepeat`, both Number in cm with one decimal allowed (FileMaker is in cm; Curtainwise prints mm, divide by 10). `PatternRepeat` blank means plain, no repeat. Both go on `UI_Fabric_Edit_Card`. Logged on the EliteFM roadmap as not gated.
 
 Why this fits the roadmap: making each item a structured quote line with a product and a fabric option row (supplier, range, metres) is exactly what Phase 2 needs to build the BOM and one PO per supplier (maker, fabric supplier, blind supplier). Free text supplier and fabric picked on the web would have to be matched again later.
 
@@ -187,4 +187,3 @@ What this means:
 ## 9. Not checked
 
 * The current FileMaker product structure for curtain making and blinds (how they are set up as `Products`, unit of measure, whether a curtain is one product with a fabric option). Need a short extract or Greg's description before scoping step D.
-* `FabricDesignRanges` field list: roll width and pattern repeat are needed for the Curtainwise file and are not listed in Standards.
