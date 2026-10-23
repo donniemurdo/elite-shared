@@ -47,7 +47,7 @@ Built by Greg with Claude Code and agentic-fm on his Mac (`/Users/gwins/Developm
 **Hosting and deploy**
 * One Cloudflare Worker, `elite-surveys`, serves both apps. `run_worker_first` is on, so the Worker handles every request. workers.dev and preview URLs are off on purpose.
 * The bed app is not deployed from its own repo: copy its files into `public/beds/` of the soft furnishings repo and deploy from there.
-* Release: `./build.sh` (joins `app/` parts into `public/index.html`), bump the cache name in `public/sw.js` and `APP_VERSION` in `app/_p6.js` to the same number (both v13 as of 2026-10-23), run `npm test`, then `npx wrangler deploy`. Phones only update after the cache name changes. There is an in app update banner, and a sign out and update screen that requires a saved draft file first.
+* Release: `./build.sh` (joins `app/` parts into `public/index.html`), bump the cache name in `public/sw.js` and `APP_VERSION` in `app/_p6.js` to the same number (both v14 as of 2026-10-23), run `npm test`, then `npx wrangler deploy`. Phones only update after the cache name changes. There is an in app update banner, and a sign out and update screen that requires a saved draft file first.
 * Deploys can run from the project cloud environment (scoped Cloudflare token). Any deploy needs Greg's go ahead, and anything that might break the live app on site is flagged before shipping.
 
 **Apps**
@@ -64,8 +64,8 @@ Built by Greg with Claude Code and agentic-fm on his Mac (`/Users/gwins/Developm
 **Login**
 * Cloudflare Access with Microsoft Entra (M365). The Worker also verifies the Access token itself and fails closed.
 * `wrangler.jsonc`: `TEAM_DOMAIN`, `POLICY_AUD` (one or more Access app audience tags, comma separated), `ALLOWED_DOMAIN` (elitecontractfurniture.co.uk), `ADMINS` (greg), `OFFICE` (amen, betsy, greg).
-* Live (v13): office users add and edit jobs; everyone signed in sees the whole job list and updates status. Staff already signed in to M365 get in without a prompt (expected).
-* From PR #3 (not deployed yet): `ADMINS` and `OFFICE` see every job and use `/admin/`. Everyone else sees only jobs where they are measurer or fitter (no change history), can only change status on those, can only open the survey for those, and is sent away from `/admin/`. Only `ADMINS` edits the people list at `/admin/people.html`; office reads it for the job form dropdowns. Someone outside the company domain gets in only while Active in the people list (and only if Access lets them in); they cannot open `/beds/` or bed backups.
+* Staff already signed in to M365 get in without a prompt (expected).
+* Live since v14 (PR #3 carried in PR #4): `ADMINS` and `OFFICE` see every job and use `/admin/`. Everyone else sees only jobs where they are measurer or fitter (no change history), can only change status on those, can only open the survey for those, and is sent away from `/admin/`. Only `ADMINS` edits the people list at `/admin/people.html`; office reads it for the job form dropdowns. Someone outside the company domain gets in only while Active in the people list (and only if Access lets them in); they cannot open `/beds/` or bed backups.
 
 **Jobs**
 * One job can have a measure visit and a fit visit. Fit only jobs (`fitOnly = '1'`) have no measure visit; the client supplied sizes.
@@ -85,7 +85,7 @@ Built by Greg with Claude Code and agentic-fm on his Mac (`/Users/gwins/Developm
 * The brand PDFs are the source (Greg, 2026-10-23). All colours, fonts, buttons, forms and logos come from the shared design file: [design/elite-design.md](design/elite-design.md), tokens in `design/elite-brand.css`, logos in `design/logos/`. Do not invent styles; add anything missing to the design file first.
 * Elite CF for all internal apps; Beds and FF&E styling only on what those customers see. Each app keeps its own copy of the CSS and fonts so it works offline.
 * Light theme only.
-* The apps still use older colours and fonts; bringing them in line is section 10.
+* Soft furnishings app and admin pages use the brand since v14 (Poppins and Lato bundled, navy bar, olive #686D1E main buttons, logos). New components there: top bar with menu sheet (sign out in its own last section), job card with step list, segmented tap buttons for lists of 4 or fewer, "choose one" flag on blank critical fields. The bed survey still uses the old styling.
 
 ## 6. Done
 
@@ -108,22 +108,23 @@ Built by Greg with Claude Code and agentic-fm on his Mac (`/Users/gwins/Developm
 * Survey review and quoting recommendation: [docs/survey-review-and-quoting.md](docs/survey-review-and-quoting.md). Office reviews each item and clears warnings on a new admin review screen; only Checked surveys go to FileMaker; supplier, product and fabric are picked and priced in FileMaker on a new allocation card off the quote (not on the web page, because FileMaker owns the catalogue, codes and costing). Greg's answers recorded 2026-10-23 (Curtainwise costs fabric metres and making; that send lives in FileMaker). Nothing built; remaining decisions in section 11.
 * This shared repo and note created.
 * Tests fixed: `npm install`, then `./build.sh && npm test` runs all 7 files from the repo (Playwright for app and admin, Node for the Worker).
-* People list, own jobs only and external user support (soft furnishings [PR #3](https://github.com/donniemurdo/elite-softfurnishing-survey/pull/3), built on PR #2, all 9 test files pass, **not deployed**, needs Greg's OK). Measurer and fitter fields are dropdowns from the list, sales reps appear as measurers, "Someone else..." for a one off.
+* People list, own jobs only and external user support (soft furnishings [PR #3](https://github.com/donniemurdo/elite-softfurnishing-survey/pull/3), live in v14). Measurer and fitter fields are dropdowns from the list, sales reps appear as measurers, "Someone else..." for a one off.
 * Release v13 (soft furnishings PR #1, live 2026-10-23, version 547e2eaa): office notes (access and parking, notes for the measurer or fitter) shown in full in a Kiwi "Read before you start" box at the top of the job screen, plus a "Notes, read first" chip on job list cards; phone and pin icons on Call and Directions; admin New measure shows only measure fields and New fit only fit fields (Edit and Duplicate show all).
+* Release v14 (soft furnishings [PR #4](https://github.com/donniemurdo/elite-softfurnishing-survey/pull/4), live 2026-10-23, version c169667a, includes PR #3): app style redesign per the UI plan (top bar, menu top right with sign out in its own section that saves first, new job home with job card and steps, tap buttons for short choices, brand fonts, colours and logos, admin side navigation); heading, lining, drop reference and blind fit start blank and are flagged; fabric allocation removed from the app (FileMaker does it), a "fabric chosen by the customer" note kept; all sizes in cm with one decimal, mm surveys converted once on load (phone, cloud, draft file), Excel headings in cm.
 
 ## 7. To do next (in this order unless Greg says otherwise)
 
-1. Check release v13 on a phone (live 2026-10-23).
-2. People list and own jobs only (PR #3): PR #2 is merged; PR #3 ships in the combined release with the other UI changes (Greg, 2026-10-23: app not live until testing starts Monday, so one release, no separate v14). After deploy Greg opens `/admin/people.html` and adds David MacFarlane (measurer) and any fitters and reps. Until someone is in the list, the office uses "Someone else..." on the job form. Warn measurers first: after v14 they see only their own jobs.
+1. Greg reviews v14 on a phone (live 2026-10-23); testing starts Monday 2026-10-26. Backup recheck after v14 handed to the R2 thread.
+2. People list: live in v14. Greg opens `/admin/people.html` and adds David MacFarlane (measurer) and any fitters and reps. Until someone is in the list, the office uses "Someone else..." on the job form. Measurers now see only their own jobs.
 3. Scot Rigby (external measurer and fitter, emailed PIN, deferred until near his first job): Greg adds him on the People page, then sets up Access as in section 9 item 2. The Worker side is already in PR #3.
 4. Blind child safety:
    * Hanging height per blind (floor to top of blind).
-   * Chain length to order = hanging height minus 1500 mm, rounded down to 10 mm. Chains are made to measure, so any length is allowed.
-   * Warn if the chain would be under about 500 mm, or if hanging height is missing (Check screen and when marking measured).
+   * Chain length to order = hanging height minus 150 cm, rounded down to 1 cm. Chains are made to measure, so any length is allowed.
+   * Warn if the chain would be under about 50 cm, or if hanging height is missing (Check screen and when marking measured).
    * Required safety device per chain operated blind: tensioner fixed to wall, breakaway, or chain break.
    * All of it in the Excel export.
-5. Survey review: phone app critical choices start blank (agreed 2026-10-23; blind fit, drop reference, heading, lining are pre-filled today, so the office cannot tell chosen from untouched), shared warning rules file, survey locks after Measured; then the admin review screen with edits, warning clearance and Mark as checked. Steps A and B in [docs/survey-review-and-quoting.md](docs/survey-review-and-quoting.md) section 7. No FileMaker change.
-6. Later: FileMaker format Excel export (Greg supplies the format), cloud backup for the bed survey, Curtainwise column template, brand fonts and logo, possibly an import of jobs from FileMaker (check the DDR first). Survey to FileMaker stage 0 (UUID survey ids, revision counter) fits here, see section 10.
+5. Survey review: critical choices start blank (done in v14); next a shared warning rules file, survey locks after Measured; then the admin review screen with edits, warning clearance and Mark as checked. Steps A and B in [docs/survey-review-and-quoting.md](docs/survey-review-and-quoting.md) section 7. No FileMaker change.
+6. Later: FileMaker format Excel export (Greg supplies the format), cloud backup for the bed survey, Curtainwise column template, possibly an import of jobs from FileMaker (check the DDR first). Survey to FileMaker stage 0 (UUID survey ids, revision counter) fits here, see section 10.
 
 ## 8. Rules
 
@@ -157,7 +158,7 @@ Built by Greg with Claude Code and agentic-fm on his Mac (`/Users/gwins/Developm
 * R2 location hints only work the first time a bucket name is ever created. To move a bucket again, use a new name or a jurisdiction.
 * `fitOnly` is handled by its own line in `cleanMeasure` and is not in the `MFIELDS` list.
 * Fit completion photos are job level, not per item.
-* `APP_VERSION` and the service worker cache name are separate; keep them on the same number (v13 and `curtain-survey-v13` from release v13).
+* `APP_VERSION` and the service worker cache name are separate; keep them on the same number (v14 and `curtain-survey-v14` from release v14).
 * Surveys started without a measure get a 4 character random id: not safe as a key in FileMaker. Needs a full UUID (integration stage 0). No revision counter yet.
 * Photos upload inline as base64 in one request (up to 40 MB), which fails on poor signal. Split into one upload per photo.
 * Bed survey has no cloud upload at all.
@@ -175,9 +176,8 @@ Also agreed: everything in cm (one decimal allowed), and Curtainwise CSV or Exce
 2. Excel (rollers): how orders go into the Blindata portal and whether it takes an upload. Recommended: printable roller list from FileMaker.
 
 **Design** (details in [design/elite-design.md](design/elite-design.md) section 8)
-1. Buttons: darker olive #686D1E (passes contrast) or brand olive with larger bold labels?
-2. Bed survey brand: Beds (retail) or CF (hotels)?
-3. SVG logo files from the designer.
+1. Bed survey brand: Beds (retail) or CF (hotels)?
+2. SVG logo files from the designer.
 
 **EliteFM:** see [Docs/STATUS.md](https://github.com/donniemurdo/EliteFM/blob/main/Docs/STATUS.md) "Next session". As of 2026-10-09: finishing the `UI_Quote_Print` sliding test, then the quote send script. Survey import is not on the EliteFM roadmap; no FileMaker survey tables before Greg's go ahead and the Phase 1 gate.
 
@@ -185,6 +185,7 @@ Also agreed: everything in cm (one decimal allowed), and Curtainwise CSV or Exce
 
 | Date | What changed |
 |---|---|
+| 2026-10-23 | Soft furnishings v14 live (PR #4, includes PR #3): UI redesign with menu and separate sign out, brand applied, blank critical choices, fabric allocation left to FileMaker, all sizes in cm (mm surveys converted on load). Olive #686D1E buttons approved by Greg. |
 | 2026-10-23 | Access: staff login confirmed Microsoft only with Instant Auth (infra item 2 staff part done). Token given Access Apps and Policies Edit; Claude changes Access only when Greg asks. |
 | 2026-10-23 | Soft furnishings PR #3: people list (Greg edits), measurers and fitters see only their own jobs, external email PIN users allowed only while in the list, admin dropdowns. Not deployed. Access item 2 split into "Microsoft only now" and the Scot options. |
 | 2026-10-23 | Survey review: everything in cm; Curtainwise CSV or Excel export imported into FileMaker. |

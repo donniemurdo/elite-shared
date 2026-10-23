@@ -63,7 +63,7 @@ Note: the Beds and FF&E palette pages still carry template placeholder text ("Pr
 | White on Sage (Beds) | 2.9:1 | Fails, logo and large text only |
 | White on Rust (FF&E) | 6.4:1 | Pass |
 
-The brand Olive with white text is just under the accessibility minimum, which matters outdoors on a phone. The CSS uses a slightly darker Olive **#686D1E** for button fills. It is visually very close. **Needs Greg's OK**; the alternative is brand Olive with 19px bold labels.
+The brand Olive with white text is just under the accessibility minimum, which matters outdoors on a phone. The CSS uses a slightly darker Olive **#686D1E** for button fills. It is visually very close. Approved by Greg 2026-10-23.
 
 **Logo**
 * Header band: primary logo (white on Navy). Light screens and printouts: secondary (Navy on white).
@@ -124,7 +124,6 @@ Uses an unrelated palette (grey blue with yellow #F2B705) and Arial Narrow. Rest
 
 ## 8. Open points
 
-1. Darker Olive #686D1E for buttons, or brand Olive with larger bold labels.
-2. Bed survey brand: Beds or CF.
-3. SVG logo files from the designer.
-4. Home for this file: a shared project repo (expected `donniemurdo/elite-shared`). Each app keeps its own copy of elite-brand.css and the fonts so it still works offline.
+1. Bed survey brand: Beds or CF.
+2. SVG logo files from the designer.
+3. Home for this file: a shared project repo (expected `donniemurdo/elite-shared`). Each app keeps its own copy of elite-brand.css and the fonts so it still works offline.
