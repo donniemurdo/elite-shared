@@ -53,6 +53,7 @@ Built by Greg with Claude Code and agentic-fm on his Mac (`/Users/gwins/Developm
 | 2026-10-23 | Cloud environment "Elite cloud" (project default): scoped Cloudflare API token (expires 2027-10-23), account ID, wrangler from the setup script, full network. Read access verified; write access not proven until the first real deploy. Any deploy needs Greg's go ahead. |
 | 2026-10-23 | No spare Claris licence, and custom OAuth or an external IdP does not avoid one (FileMaker Cloud Data API needs a licensed Claris ID). So FileMaker **pulls** from a secured Worker feed on a server schedule using Insert from URL, running as Greg's Claris ID. Design: [docs/survey-to-filemaker.md](docs/survey-to-filemaker.md). Status: draft, not approved. |
 | 2026-10-23 | Brand: Elite CF proposed for all internal apps (soft furnishings survey, admin page, FileMaker). Beds and FF&E styling only on what those customers see. Design file: [design/elite-design.md](design/elite-design.md), tokens in `design/elite-brand.css`. |
+| 2026-10-23 | Brand PDFs win over the older app colours and fonts. [design/elite-design.md](design/elite-design.md) is the source of truth for styling. |
 | 2026-10-23 | Shared files (this note, design, docs) live in this repo. Each app keeps its own copy of the brand CSS and fonts so it still works offline. |
 
 ## 6. Open items

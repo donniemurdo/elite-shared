@@ -3,6 +3,8 @@
 Source: Elite CF, Elite Beds and Elite FF&E brand guidelines (PDFs uploaded 23 Oct 2026).
 Tokens for code: [elite-brand.css](elite-brand.css). Logos: [logos/](logos/).
 
+**Source of truth (Greg, 23 Oct 2026):** the brand PDFs, as set out in this file, override any older colours or fonts in the apps or earlier handover notes (navy #012547, cream backgrounds, Questa Grande, Louis George Cafe).
+
 Every app takes its colours, fonts, buttons and forms from this file. If something is not covered here, add it here first rather than styling it in one app.
 
 ## 1. Which brand for which app
