@@ -155,6 +155,7 @@ Built by Greg with Claude Code and agentic-fm on his Mac (`/Users/gwins/Developm
 * Never deploy from a branch whose `wrangler.jsonc` lacks `"jurisdiction": "eu"` on SURVEYS: wrangler silently creates a new North America bucket instead (happened once on 2026-10-23).
 * Tests: run `./build.sh && npm test` after every change. On a new machine run `npx playwright install chromium` once.
 * `wrangler deploy` silently creates a missing R2 bucket in North America. If the `jurisdiction: eu` line is ever lost from `wrangler.jsonc`, the Worker binds to a new empty bucket and the job list looks empty.
+* Expired Access session (24h) leaves users stuck: `sw.js` serves navigations cache-first, so the Access login never shows and the app says "Sign in again with signal". Workaround: open `/admin/` (the service worker skips it, so Access prompts). Fix handed to the release thread (2026-10-23): a `/signin` route and button, or network-first navigations.
 * R2 location hints only work the first time a bucket name is ever created. To move a bucket again, use a new name or a jurisdiction.
 * `fitOnly` is handled by its own line in `cleanMeasure` and is not in the `MFIELDS` list.
 * Fit completion photos are job level, not per item.
