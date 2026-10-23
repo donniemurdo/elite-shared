@@ -47,7 +47,7 @@ Built by Greg with Claude Code and agentic-fm on his Mac (`/Users/gwins/Developm
 **Hosting and deploy**
 * One Cloudflare Worker, `elite-surveys`, serves both apps. `run_worker_first` is on, so the Worker handles every request. workers.dev and preview URLs are off on purpose.
 * The bed app is not deployed from its own repo: copy its files into `public/beds/` of the soft furnishings repo and deploy from there.
-* Release: `./build.sh` (joins `app/` parts into `public/index.html`), bump the cache name in `public/sw.js` and `APP_VERSION` in `app/_p6.js` to the same number (both v16 as of 2026-10-23), run `npm test`, then `npx wrangler deploy`. Phones only update after the cache name changes. There is an in app update banner, and a sign out and update screen that requires a saved draft file first.
+* Release: `./build.sh` (joins `app/` parts into `public/index.html`), bump the cache name in `public/sw.js` and `APP_VERSION` in `app/_p6.js` to the same number (both v17 as of 2026-10-23), run `npm test`, then `npx wrangler deploy`. Phones only update after the cache name changes. There is an in app update banner, and a sign out and update screen that requires a saved draft file first.
 * Deploys can run from the project cloud environment (scoped Cloudflare token). Any deploy needs Greg's go ahead, and anything that might break the live app on site is flagged before shipping.
 
 **Apps**
@@ -113,6 +113,7 @@ Built by Greg with Claude Code and agentic-fm on his Mac (`/Users/gwins/Developm
 * Release v14 (soft furnishings [PR #4](https://github.com/donniemurdo/elite-softfurnishing-survey/pull/4), live 2026-10-23, version c169667a, includes PR #3): app style redesign per the UI plan (top bar, menu top right with sign out in its own section that saves first, new job home with job card and steps, tap buttons for short choices, brand fonts, colours and logos, admin side navigation); heading, lining, drop reference and blind fit start blank and are flagged; fabric allocation removed from the app (FileMaker does it), a "fabric chosen by the customer" note kept; all sizes in cm with one decimal, mm surveys converted once on load (phone, cloud, draft file), Excel headings in cm.
 * Release v15 ([PR #5](https://github.com/donniemurdo/elite-softfurnishing-survey/pull/5), live 2026-10-23, version ff4b203e): fixed users being stuck after the 24h Access session expired (service worker served the cached page so the login never appeared; pages now network first with offline fallback, `/signin` route and Sign in button). Office only Fabrics and Allocate fabrics screens restored as an interim until the new FileMaker allocates fabric (confirmed by Greg 2026-10-23). The app needs no FileMaker link: Q- ref optional, jobs entered by hand.
 * Release v16 ([PR #6](https://github.com/donniemurdo/elite-softfurnishing-survey/pull/6), live 2026-10-23, version c6ebff7d): Supplier data Excel and CSV leave out client details and all notes, name the file by job ref, and add a Location column (room and window) per item; it is the file the office sends Curtainwise until the new FileMaker produces it. New test `tests/tsup.mjs`.
+* Release v17 ([PR #7](https://github.com/donniemurdo/elite-softfurnishing-survey/pull/7), live 2026-10-23, version dcdd5935): People page email box no longer loses focus after the first character; the External label shows only for a complete outside email.
 
 ## 7. To do next (in this order unless Greg says otherwise)
 
@@ -162,7 +163,7 @@ Built by Greg with Claude Code and agentic-fm on his Mac (`/Users/gwins/Developm
 * R2 location hints only work the first time a bucket name is ever created. To move a bucket again, use a new name or a jurisdiction.
 * `fitOnly` is handled by its own line in `cleanMeasure` and is not in the `MFIELDS` list.
 * Fit completion photos are job level, not per item.
-* `APP_VERSION` and the service worker cache name are separate; keep them on the same number (v16 and `curtain-survey-v16` from release v16).
+* `APP_VERSION` and the service worker cache name are separate; keep them on the same number (v17 and `curtain-survey-v17` from release v17).
 * Surveys started without a measure get a 4 character random id: not safe as a key in FileMaker. Needs a full UUID (integration stage 0). No revision counter yet.
 * Photos upload inline as base64 in one request (up to 40 MB), which fails on poor signal. Split into one upload per photo.
 * Bed survey has no cloud upload at all.
@@ -188,6 +189,7 @@ Also agreed: everything in cm (one decimal allowed), and Curtainwise CSV or Exce
 
 | Date | What changed |
 |---|---|
+| 2026-10-23 | Soft furnishings v17 (PR #7) live, version dcdd5935: People page email box fix. |
 | 2026-10-23 | Design decisions closed: bed survey brand is Elite CF, no SVG logos (PNGs are masters), olive #686D1E confirmed. |
 | 2026-10-23 | `FabricDesignRanges` confirmed to have no roll width or pattern repeat; two fields specified and added to the EliteFM roadmap. |
 | 2026-10-23 | Soft furnishings v16 (PR #6) live, version c6ebff7d: supplier Excel is the Curtainwise file for now, with no client details or notes and a Location per item. Excel Measure To options recorded. |
