@@ -54,7 +54,8 @@ Built by Greg with Claude Code and agentic-fm on his Mac (`/Users/gwins/Developm
 * Offline first: service worker, localStorage, photos in IndexedDB. The service worker skips `/api/`, `/beds/`, `/curtains` and `/admin`.
 * Export: Excel only (ExcelJS), no CSV. The admin Excel download needs `exceljs.min.js` in `public/admin/`.
 
-**Storage (R2 bucket `elite-surveys`, bound as `SURVEYS`)**
+**Storage (R2 bucket `elite-surveys` in the EU jurisdiction, bound as `SURVEYS` with `"jurisdiction": "eu"`)**
+* Any wrangler command on the bucket needs `--jurisdiction eu` (for example `npx wrangler r2 object get elite-surveys/measures/all.json --jurisdiction eu --remote --pipe`). Without it wrangler looks for a bucket that no longer exists.
 * Surveys: `curtains/<email slug>/<id>.json` plus `.prev.json` copies.
 * `bymeasure/<id>.json` pointers so a fitter loads the latest survey for a job whoever saved it.
 * Jobs: one object, `measures/all.json`, written with an etag check and retry; previous copy in `all.prev.json`. Fine for hundreds of jobs; move to D1 if it grows.
@@ -135,7 +136,7 @@ Built by Greg with Claude Code and agentic-fm on his Mac (`/Users/gwins/Developm
 
 | # | Action | Who | Status |
 |---|---|---|---|
-| 1 | Move R2 bucket `elite-surveys` from North America to Western Europe. Location cannot be changed: empty, delete, then `npx wrangler r2 bucket create elite-surveys --location weur`. Worker binds by name, so only a redeploy is needed. Contents are test data, but list exactly what will be lost and get Greg's OK before deleting. | Claude | Greg approved deleting the test objects and moving the bucket (2026-10-23). Open until done and confirmed |
+| 1 | Move R2 bucket `elite-surveys` out of North America. The `--location weur` hint is ignored when a bucket name is reused, so the bucket was recreated in the EU jurisdiction (Greg's choice), same name. Cloudflare places it in EEUR; data is guaranteed to stay in the EU. 11 test objects deleted, old bucket deleted, Worker redeployed with the EU binding, write and read checked. | Claude | **Done 2026-10-23.** Greg to confirm one real cloud backup save from the app shows as saved. PR in elite-softfurnishing-survey must be merged before any other deploy |
 | 2 | Cloudflare Access on the measure app: Microsoft for staff, emailed PIN for Scot only. Until Scot is added: untick One time PIN so only Microsoft shows, and Instant authentication can be on. When Scot is added: re-tick One time PIN, add a policy that allows only Scot's email with login method One time PIN, require the Microsoft login method on the staff policy, and turn Instant authentication off (it only works with one login method). | Greg (steps from Claude) | Open |
 | 3 | Teams: `TEAMS_WEBHOOK_URL` is already set as a Worker secret (seen by the 2026-10-23 deploy check). Still to do: live test with a real booking; a card should appear in Measure & Fit with the measurer mentioned. | Greg tests | Open, live test unconfirmed |
 | 4 | Measurers move to the new address (save a draft file first, then re add the Home Screen icon). Bed app is at `/beds/`. Retire the old morning-queen-dc99 workers.dev address. | Greg and measurers | Open |
@@ -146,6 +147,7 @@ Built by Greg with Claude Code and agentic-fm on his Mac (`/Users/gwins/Developm
 ## 10. Known issues and gotchas
 
 * Tests: run `./build.sh && npm test` after every change. On a new machine run `npx playwright install chromium` once.
+* R2 location hints only work the first time a bucket name is ever created. To move a bucket again, use a new name or a jurisdiction.
 * `fitOnly` is handled by its own line in `cleanMeasure` and is not in the `MFIELDS` list.
 * Fit completion photos are job level, not per item.
 * `APP_VERSION` and the service worker cache name are separate; keep them on the same number (v13 and `curtain-survey-v13` from release v13).
@@ -175,6 +177,7 @@ Built by Greg with Claude Code and agentic-fm on his Mac (`/Users/gwins/Developm
 
 | Date | What changed |
 |---|---|
+| 2026-10-23 | R2 bucket `elite-surveys` moved to the EU jurisdiction (location hint ignored for a reused name). Test data deleted. Worker redeployed with `jurisdiction: eu` binding. |
 | 2026-10-23 | Soft furnishings: tests runnable from the repo; release v13 built (notes stand out, call and directions icons, admin New measure / New fit fix), PR #1, awaiting Greg's OK to deploy. |
 | 2026-10-23 | Brand settled: the brand PDFs and the shared design file win over the old app colours and fonts. |
 | 2026-10-23 | Survey apps pushed to GitHub. Cloud deploy access checked. Design file and survey to FileMaker design drafted. This note created, then merged with Greg's handover from the previous chat. |
