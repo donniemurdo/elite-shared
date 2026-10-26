@@ -133,7 +133,7 @@ Built by Greg with Claude Code and agentic-fm on his Mac (`/Users/gwins/Developm
 ## 7. To do next (in this order unless Greg says otherwise)
 
 1. v18 is live (2026-10-26 18:03 UK). Greg checks it on 2026-10-27 before v19 goes out: a Measured card in Measure & Fit, Hotel Du Vin on the admin page (its copy is from v17, so the summary shows once David saves again on v18). Ceiling drops on existing surveys read shorter by the track deduction.
-   v19 (build now, release only after Greg's OK): blind chains and safety devices (item 4), office review (item 5), and locking: once marked measured the measure survey locks on phones, flagged items stay editable until answered then lock, no notes or photos added unless the office unlocks; only Greg and office unlock (Reopen). Fit completion still works on a fit visit (Claude's reading, told to Greg).
+   v19 built and tested in [PR #9](https://github.com/donniemurdo/elite-softfurnishing-survey/pull/9) (not deployed; release only after Greg's OK). Office review: Edit survey on the admin page (app at `/?review=<job>&edit=1`, Save changes, every field change logged in `checks/<job>.json`), Checked, correct per warning, Mark survey as checked (Teams card; shows as needing checking again if saved after). Measurers can no longer unmark measured (worker 403). Scope: blind chains and safety devices (item 4), office review (item 5), and locking: once marked measured the measure survey locks on phones, flagged items stay editable until answered then lock, no notes or photos added unless the office unlocks; only Greg and office unlock (Reopen). Fit completion still works on a fit visit (Claude's reading, told to Greg).
 2. People list: live in v14. Greg opens `/admin/people.html` and adds David MacFarlane (measurer) and any fitters and reps. Until someone is in the list, the office uses "Someone else..." on the job form. Measurers now see only their own jobs.
 3. Scot Rigby (external measurer and fitter, emailed PIN, deferred until near his first job): Greg adds him on the People page, then sets up Access as in section 9 item 2. The Worker side is already in PR #3.
 4. Blind child safety:
@@ -207,7 +207,7 @@ Also agreed: everything in cm (one decimal allowed), and Curtainwise CSV or Exce
 
 | Date | What changed |
 |---|---|
-| 2026-10-26 | Soft furnishings v18 built (PR #8): testing fixes (choice buttons, ceiling track deduction, bare floor flag, rail size from window, admin survey view, Teams status cards, merge when two people save one job, duplicate room flag, drop working in Excel). Deployed 18:03 UK, version d0bc02b2. v19 scope agreed (blind chains, office review, locking). |
+| 2026-10-26 | Soft furnishings v18 built (PR #8): testing fixes (choice buttons, ceiling track deduction, bare floor flag, rail size from window, admin survey view, Teams status cards, merge when two people save one job, duplicate room flag, drop working in Excel). Deployed 18:03 UK, version d0bc02b2. v19 scope agreed (blind chains, office review, locking) and built in PR #9, waiting for Greg's OK. |
 | 2026-10-23 | "How we work" section added (GitHub is the link, pull before and push after, FileMaker in VS Code, apps and Cloudflare in the project). `CLAUDE.md` pointers added to elite-shared, elite-softfurnishing-survey and elite-bed-survey. EliteFM `CLAUDE.md` unchanged. |
 | 2026-10-23 | Old morning-queen-dc99 Worker deleted by Greg and checked (infra item 4 done). |
 | 2026-10-23 | Soft furnishings v17 (PR #7) live, version dcdd5935: People page email box fix. |
