@@ -1,6 +1,6 @@
 # Elite Apps and Systems: handover note
 
-Last updated: 23 October 2026.
+Last updated: 26 October 2026.
 
 Read this before starting any piece of work. At the end of each piece of work, update the Done, To do, Infrastructure and Open sections, add a line to the change log, and change the existing line rather than adding a competing one. Where this note and a repo disagree, the repo wins; fix the note.
 
@@ -58,7 +58,7 @@ Built by Greg with Claude Code and agentic-fm on his Mac (`/Users/gwins/Developm
 **Hosting and deploy**
 * One Cloudflare Worker, `elite-surveys`, serves both apps. `run_worker_first` is on, so the Worker handles every request. workers.dev and preview URLs are off on purpose.
 * The bed app is not deployed from its own repo: copy its files into `public/beds/` of the soft furnishings repo and deploy from there.
-* Release: `./build.sh` (joins `app/` parts into `public/index.html`), bump the cache name in `public/sw.js` and `APP_VERSION` in `app/_p6.js` to the same number (both v17 as of 2026-10-23), run `npm test`, then `npx wrangler deploy`. Phones only update after the cache name changes. There is an in app update banner, and a sign out and update screen that requires a saved draft file first.
+* Release: `./build.sh` (joins `app/` parts into `public/index.html`), bump the cache name in `public/sw.js` and `APP_VERSION` in `app/_p6.js` to the same number (v18 in PR #8, not deployed yet; live is v17), run `npm test`, then `npx wrangler deploy`. Phones only update after the cache name changes. There is an in app update banner, and a sign out and update screen that requires a saved draft file first.
 * Deploys can run from the project cloud environment (scoped Cloudflare token). Any deploy needs Greg's go ahead, and anything that might break the live app on site is flagged before shipping.
 
 **Apps**
@@ -68,7 +68,8 @@ Built by Greg with Claude Code and agentic-fm on his Mac (`/Users/gwins/Developm
 **Storage (R2 bucket `elite-surveys` in the EU jurisdiction, bound as `SURVEYS` with `"jurisdiction": "eu"`)**
 * Any wrangler command on the bucket needs `--jurisdiction eu` (for example `npx wrangler r2 object get elite-surveys/measures/all.json --jurisdiction eu --remote --pipe`). Without it wrangler looks for a bucket that no longer exists.
 * Surveys: `curtains/<email slug>/<id>.json` plus `.prev.json` copies.
-* `bymeasure/<id>.json` pointers so a fitter loads the latest survey for a job whoever saved it.
+* `bymeasure/<id>.json` pointers so a fitter loads the latest survey for a job whoever saved it. From v18 the pointer holds a revision number (`rev`) and device id: phones send `X-Base-Rev`, a stale save gets 409 and the phone merges room by room (a room changed on both sides is kept twice and shows as a possible duplicate). Saves without the header (v17 phones) are not checked.
+* `review/<id>.json` (v18): short summary from the last save (counts, missing items, size checks, snags) for the admin job form and Teams cards.
 * Jobs: one object, `measures/all.json`, written with an etag check and retry; previous copy in `all.prev.json`. Fine for hundreds of jobs; move to D1 if it grows.
 * People list (from PR #3): `people/all.json`, previous copy in `people/all.prev.json`.
 
@@ -85,6 +86,7 @@ Built by Greg with Claude Code and agentic-fm on his Mac (`/Users/gwins/Developm
 
 **Teams**
 * A Teams Workflow ("Send webhook alerts to a chat") posts adaptive cards with an @mention of the measurer or fitter into the group chat Measure & Fit (4 people) when a measure or fit is booked or changed, or a job is cancelled.
+* From v18 also: Measured (who, counts, what is missing or to complete, link to admin), Fitted (items ticked, snags), Measure or fit reopened, On hold. No mention on these; they are for the office.
 * Worker secret `TEAMS_WEBHOOK_URL`. The link is the secret: never print it. The admin form has a tick box to skip the message per save.
 
 **Address lookup (admin)**
@@ -126,9 +128,11 @@ Built by Greg with Claude Code and agentic-fm on his Mac (`/Users/gwins/Developm
 * Release v16 ([PR #6](https://github.com/donniemurdo/elite-softfurnishing-survey/pull/6), live 2026-10-23, version c6ebff7d): Supplier data Excel and CSV leave out client details and all notes, name the file by job ref, and add a Location column (room and window) per item; it is the file the office sends Curtainwise until the new FileMaker produces it. New test `tests/tsup.mjs`.
 * Release v17 ([PR #7](https://github.com/donniemurdo/elite-softfurnishing-survey/pull/7), live 2026-10-23, version dcdd5935): People page email box no longer loses focus after the first character; the External label shows only for a complete outside email.
 
+* Release v18 ([PR #8](https://github.com/donniemurdo/elite-softfurnishing-survey/pull/8), built and tested 2026-10-26, **not deployed yet**, waiting for Greg's go ahead): fixes from the first day of testing. Choice buttons (control side and others) fixed: their `wrap` class clashed with the page `.wrap`. Ceiling drops take off a track deduction by heading (wave and pinch pleat 3 cm, pencil 1 cm, other headings 0, editable in Settings), separate from the floor gap. "Flooring not fitted yet" on to floor drops, flagged as needing completion until a flooring thickness is entered. Window and wall puts the calculated rail or pole size into Rail or pole width; a different size already there is kept with a warning. Admin job form shows the saved survey summary and Open full survey (phone app read only at `/?review=<job>`). Teams cards for measured, fitted, reopened, on hold. Two people on one job merge instead of last save wins. Mark as measured or fitted backs up first. New tests `t18.mjs`, `t18w.mjs`.
+
 ## 7. To do next (in this order unless Greg says otherwise)
 
-1. Greg reviews v14 on a phone (live 2026-10-23); testing starts Monday 2026-10-26. Backup recheck after v14 handed to the R2 thread.
+1. Testing started 2026-10-26. Greg OKs the v18 deploy (PR #8), then merge and `npx wrangler deploy`. After deploy: check a Measured card appears in Measure & Fit, and open Hotel Du Vin from the admin page. Note: ceiling drops on existing surveys get shorter by the track deduction (Hotel Du Vin, Dom Le Tour, 2 wave curtains, 3 cm).
 2. People list: live in v14. Greg opens `/admin/people.html` and adds David MacFarlane (measurer) and any fitters and reps. Until someone is in the list, the office uses "Someone else..." on the job form. Measurers now see only their own jobs.
 3. Scot Rigby (external measurer and fitter, emailed PIN, deferred until near his first job): Greg adds him on the People page, then sets up Access as in section 9 item 2. The Worker side is already in PR #3.
 4. Blind child safety:
@@ -175,7 +179,8 @@ Built by Greg with Claude Code and agentic-fm on his Mac (`/Users/gwins/Developm
 * `fitOnly` is handled by its own line in `cleanMeasure` and is not in the `MFIELDS` list.
 * Fit completion photos are job level, not per item.
 * `APP_VERSION` and the service worker cache name are separate; keep them on the same number (v17 and `curtain-survey-v17` from release v17).
-* Surveys started without a measure get a 4 character random id: not safe as a key in FileMaker. Needs a full UUID (integration stage 0). No revision counter yet.
+* Surveys started without a measure get a 4 character random id: not safe as a key in FileMaker. Needs a full UUID (integration stage 0). Job surveys have a revision counter from v18; surveys without a job do not.
+* Merge (v18) works room by room. Two people in the same room both get kept, and the office picks one. The track deduction for headings other than wave, pinch and pencil is 0 until Greg says otherwise.
 * Photos upload inline as base64 in one request (up to 40 MB), which fails on poor signal. Split into one upload per photo.
 * Bed survey has no cloud upload at all.
 * Soft furnishings app works in mm; Greg wants cm everywhere (one decimal), to change with the review work.
@@ -200,6 +205,7 @@ Also agreed: everything in cm (one decimal allowed), and Curtainwise CSV or Exce
 
 | Date | What changed |
 |---|---|
+| 2026-10-26 | Soft furnishings v18 built (PR #8): testing fixes (choice buttons, ceiling track deduction, bare floor flag, rail size from window, admin survey view, Teams status cards, merge when two people save one job). Deploy waiting for Greg. |
 | 2026-10-23 | "How we work" section added (GitHub is the link, pull before and push after, FileMaker in VS Code, apps and Cloudflare in the project). `CLAUDE.md` pointers added to elite-shared, elite-softfurnishing-survey and elite-bed-survey. EliteFM `CLAUDE.md` unchanged. |
 | 2026-10-23 | Old morning-queen-dc99 Worker deleted by Greg and checked (infra item 4 done). |
 | 2026-10-23 | Soft furnishings v17 (PR #7) live, version dcdd5935: People page email box fix. |
