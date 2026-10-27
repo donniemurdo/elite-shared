@@ -58,7 +58,7 @@ Built by Greg with Claude Code and agentic-fm on his Mac (`/Users/gwins/Developm
 **Hosting and deploy**
 * One Cloudflare Worker, `elite-surveys`, serves both apps. `run_worker_first` is on, so the Worker handles every request. workers.dev and preview URLs are off on purpose.
 * The bed app is not deployed from its own repo: copy its files into `public/beds/` of the soft furnishings repo and deploy from there.
-* Release: `./build.sh` (joins `app/` parts into `public/index.html`), bump the cache name in `public/sw.js` and `APP_VERSION` in `app/_p6.js` to the same number (live is v18), run `npm test`, then `npx wrangler deploy`. Phones only update after the cache name changes. There is an in app update banner, and a sign out and update screen that requires a saved draft file first.
+* Release: `./build.sh` (joins `app/` parts into `public/index.html`), bump the cache name in `public/sw.js` and `APP_VERSION` in `app/_p6.js` to the same number (live is v18.1, see change log 2026-10-27; its commit 528e35c is in PR #9, not on main yet), run `npm test`, then `npx wrangler deploy`. Phones only update after the cache name changes. There is an in app update banner, and a sign out and update screen that requires a saved draft file first.
 * Deploys can run from the project cloud environment (scoped Cloudflare token). Any deploy needs Greg's go ahead, and anything that might break the live app on site is flagged before shipping.
 
 **Apps**
@@ -182,6 +182,7 @@ Built by Greg with Claude Code and agentic-fm on his Mac (`/Users/gwins/Developm
 * Fit completion photos are job level, not per item.
 * `APP_VERSION` and the service worker cache name are separate; keep them on the same number (v17 and `curtain-survey-v17` from release v17).
 * Surveys started without a measure get a 4 character random id: not safe as a key in FileMaker. Needs a full UUID (integration stage 0). Job surveys have a revision counter from v18; surveys without a job do not.
+* A phone or browser holding a job opened before v18 has no revision. Before v18.1 its save skipped the two person check and replaced the job's survey (Hotel Du Vin, 2026-10-27 09:59: Greg's browser saved a blank copy; David's copy was untouched and the pointer was put back). From v18.1 it sends X-Base-Rev -1, is refused if anything is saved, and merges first.
 * Merge (v18) works room by room. Two people in the same room both get kept, and the office picks one. The track deduction for headings other than wave, pinch and pencil is 0 until Greg says otherwise.
 * Photos upload inline as base64 in one request (up to 40 MB), which fails on poor signal. Split into one upload per photo.
 * Bed survey has no cloud upload at all.
@@ -208,6 +209,7 @@ Also agreed: everything in cm (one decimal allowed), and Curtainwise CSV or Exce
 | Date | What changed |
 |---|---|
 | 2026-10-26 | Soft furnishings v18 built (PR #8): testing fixes (choice buttons, ceiling track deduction, bare floor flag, rail size from window, admin survey view, Teams status cards, merge when two people save one job, duplicate room flag, drop working in Excel). Deployed 18:03 UK, version d0bc02b2. v19 scope agreed (blind chains, office review, locking) and built in PR #9, waiting for Greg's OK. |
+| 2026-10-27 | Hotel Du Vin showed 0 rooms: a pre v18 browser copy (blank) replaced the job pointer. David's copy was safe; pointer and summary restored to it (Greg's OK). Hotfix v18.1 deployed 10:13 UK (version 5659f2fc): saves without a revision merge first. Commit 528e35c merged into the v19 branch (PR #9). |
 | 2026-10-23 | "How we work" section added (GitHub is the link, pull before and push after, FileMaker in VS Code, apps and Cloudflare in the project). `CLAUDE.md` pointers added to elite-shared, elite-softfurnishing-survey and elite-bed-survey. EliteFM `CLAUDE.md` unchanged. |
 | 2026-10-23 | Old morning-queen-dc99 Worker deleted by Greg and checked (infra item 4 done). |
 | 2026-10-23 | Soft furnishings v17 (PR #7) live, version dcdd5935: People page email box fix. |
