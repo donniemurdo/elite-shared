@@ -1,6 +1,6 @@
 # Elite Apps and Systems: handover note
 
-Last updated: 26 October 2026.
+Last updated: 13 November 2026.
 
 Read this before starting any piece of work. At the end of each piece of work, update the Done, To do, Infrastructure and Open sections, add a line to the change log, and change the existing line rather than adding a competing one. Where this note and a repo disagree, the repo wins; fix the note.
 
@@ -41,7 +41,7 @@ Survey apps (phones, offline first)  ->  FileMaker (sale and order)  ->  Xero (i
 |---|---|---|
 | Soft furnishings survey (curtains, blinds, pelmets, voiles, hardware) at the root of measure.elitecontractfurniture.co.uk, office admin page at `/admin/`, the Worker | [donniemurdo/elite-softfurnishing-survey](https://github.com/donniemurdo/elite-softfurnishing-survey) (private; the zip folder is named elite-curtain-survey) | In build, focus |
 | Bed survey at `/beds/` | [donniemurdo/elite-bed-survey](https://github.com/donniemurdo/elite-bed-survey) (private) | Backburner |
-| EliteFM (FileMaker) | [donniemurdo/EliteFM](https://github.com/donniemurdo/EliteFM) (docs only, .fmp12 not in git) | In build, focus. Phase 1 (quote PDF and email) |
+| EliteFM (FileMaker) | [donniemurdo/EliteFM](https://github.com/donniemurdo/EliteFM) (docs only, .fmp12 not in git) | In build, focus. Phase 1 (quote PDF and email): print layout lines and page 1 header done 2026-11-13; totals, T&Cs, later page header, footer and the send script still to build. Resume point in its Docs/STATUS.md "Next session". |
 | Shared files (this repo) | [donniemurdo/elite-shared](https://github.com/donniemurdo/elite-shared) | Handover note, `design/`, `docs/` |
 
 **EliteFM:** do not copy its rules here. Read its own files first:
@@ -208,6 +208,7 @@ Also agreed: everything in cm (one decimal allowed), and Curtainwise CSV or Exce
 
 | Date | What changed |
 |---|---|
+| 2026-11-13 | EliteFM quote PDF: headings print as section bands, line rows finished (quantity, alternatives, discounts), page 1 header built with a navy logo made from the cream file (EliteFM Docs/Elite_Name_Only_Navy.png), rep email left off the quote. Delivery address lookup and delivery method logged in the EliteFM Roadmap. Next: totals and sign off. |
 | 2026-10-26 | Soft furnishings v18 built (PR #8): testing fixes (choice buttons, ceiling track deduction, bare floor flag, rail size from window, admin survey view, Teams status cards, merge when two people save one job, duplicate room flag, drop working in Excel). Deployed 18:03 UK, version d0bc02b2. v19 scope agreed (blind chains, office review, locking) and built in PR #9, waiting for Greg's OK. |
 | 2026-10-27 | Hotel Du Vin showed 0 rooms: a pre v18 browser copy (blank) replaced the job pointer. David's copy was safe; pointer and summary restored to it (Greg's OK). Hotfix v18.1 deployed 10:13 UK (version 5659f2fc): saves without a revision merge first. Commit 528e35c merged into the v19 branch (PR #9). |
 | 2026-10-27 | Soft furnishings v19 deployed 11:43 UK (version 99998b87, Greg's go ahead): blind chains, lock after measured, office review, track deduction 2/0 cm, hand drawn default, auto load and save of jobs. |
